@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>LegalEase | Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+  <!-- Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      font-family: "Playfair Display", serif;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav-links li a:hover { text-decoration: underline; }
+
+    /* Main Chat Layout */
+    main {
+      flex: 1;
+      margin-top: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .chat-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 800px;
+      height: 70vh;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: black;
+      color: white;
+      padding: 1rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 1.1rem;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background: #f8f8f8;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bubble {
+      margin: 6px 0;
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 75%;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+      font-size: 15px;
+    }
+    .user { align-self: flex-end; background: #ddd; color: #000; }
+    .bot { align-self: flex-start; background: #111; color: #fff; }
+
+    .composer {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid #e0e0e0;
+      background: #fafafa;
+    }
+    .composer textarea {
+      flex: 1;
+      resize: none;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    .composer button {
+      background: black;
+      color: white;
+      border: none;
+      padding: 0 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    footer {
+      background: black;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo">LegalEase</div>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="scan-doc.html">Scan Doc</a></li>
+        <li><a href="profile.html">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Chat -->
+  <main>
+    <div class="chat-container">
+      <div class="chat-header">
+        <i class="fas fa-balance-scale"></i> LegalEase Chatbot
+      </div>
+      <div class="chat-body" id="chat"></div>
+      <div class="composer">
+        <textarea id="input" placeholder="Type your question here..."></textarea>
+        <button id="send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LegalEase | Built with MERN</p>
+  </footer>
+
+  <script type="module">
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    const GEMINI_API_KEY = "AIzaSyA0nkn3-ECmii-kvDrMxOOF1mQ56MTKgZ0";
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const chatBox = document.getElementById("chat");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+
+    function appendBubble(text, who = "bot") {
+      const div = document.createElement("div");
+      div.className = "bubble " + (who === "user" ? "user" : "bot");
+      div.innerHTML = marked.parse(text);
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function askGemini(prompt) {
+      appendBubble(prompt, "user");
+
+      try {
+        const result = await model.generateContent({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: `
+                  You are LegalEase, an AI that explains legal documents simply.
+                  - Break down contracts & clauses into plain English.
+                  - Highlight risks, obligations, deadlines, and penalties.
+                  - Always be professional, concise, and neutral.
+                  - Never provide actual legal advice, only summaries & insights.
+                  `
+                },
+                { text: prompt }
+              ]
+            }
+          ]
+        });
+
+        let reply = result.response.text();
+        appendBubble(reply, "bot");
+      } catch (err) {
+        console.error(err);
+        appendBubble("⚠️ Error: " + err.message, "bot");
+      }
+    }
+
+    send.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      askGemini(text);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        send.click();
+      }
+    });
+
+    appendBubble("👋 Hi! I'm LegalEase. Upload a contract or ask me about clauses & risks.", "bot");
+  </script>
+</body>
+</html>
