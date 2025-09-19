@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LegalEase | Profile</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(212, 160, 23, 0.2);
+    }
+    .navbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      font-family: "Playfair Display", serif;
+      text-shadow: 0 2px 8px rgba(212, 160, 23, 0.3);
+      cursor: pointer;
+    }
+    .logo::after {
+      content: '⚖️';
+      margin-left: 8px;
+      animation: scaleBalance 3s ease-in-out infinite;
+      display: inline-block;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      display: block;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-links li a:hover {
+      background: rgba(212, 160, 23, 0.15);
+      border-color: rgba(212, 160, 23, 0.4);
+      color: #d4a017;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(212, 160, 23, 0.2);
+    }
+    .nav-links li a.active {
+      background: rgba(212, 160, 23, 0.2);
+      border-color: rgba(212, 160, 23, 0.6);
+      color: #d4a017;
+    }
+
+    @keyframes scaleBalance {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-5deg) scale(1.1); }
+      75% { transform: rotate(5deg) scale(1.1); }
+    }
+
+    /* Main */
+    main {
+      flex: 1;
+      margin-top: 90px;
+      padding: 2rem;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      color: #000;
+    }
+    .subtitle {
+      color: #555;
+      margin-bottom: 3rem;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    /* Form Sections */
+    .form-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .section-title {
+      font-family: "Playfair Display", serif;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-icon {
+      color: #d4a017;
+      font-size: 1.5rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      background: white;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #d4a017;
+      box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.1);
+      transform: translateY(-2px);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Slider Styles */
+    .slider-group {
+      margin-bottom: 2rem;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .slider-value {
+      background: #d4a017;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #e0e0e0;
+      outline: none;
+      transition: all 0.3s ease;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4a017, #f4c430);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 6px 20px rgba(212, 160, 23, 0.4);
+    }
+
+    .slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4a017, #f4c430);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+    }
+
+    /* Checkbox Styles */
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .checkbox-item:hover {
+      background: #e9ecef;
+      transform: translateY(-2px);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: auto;
+      margin-right: 0.75rem;
+      transform: scale(1.2);
+    }
+
+    .checkbox-item label {
+      margin: 0;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    /* Priority Cards */
+    .priority-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .priority-card {
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .priority-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .priority-card:hover::before {
+      left: 100%;
+    }
+
+    .priority-card:hover {
+      border-color: #d4a017;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(212, 160, 23, 0.2);
+    }
+
+    .priority-card.selected {
+      border-color: #d4a017;
+      background: linear-gradient(135deg, rgba(212, 160, 23, 0.1), rgba(244, 196, 48, 0.1));
+    }
+
+    .priority-icon {
+      font-size: 2rem;
+      color: #d4a017;
+      margin-bottom: 0.5rem;
+    }
+
+    .priority-card h4 {
+      margin: 0 0 0.5rem 0;
+      color: #333;
+    }
+
+    .priority-card p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* Save Button */
+    .save-section {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .save-btn {
+      background: linear-gradient(135deg, #2a9d8f, #21b896);
+      color: white;
+      border: none;
+      padding: 1.25rem 3rem;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(42, 157, 143, 0.3);
+    }
+
+    .save-btn:hover {
+      background: linear-gradient(135deg, #21b896, #2a9d8f);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(42, 157, 143, 0.4);
+    }
+
+    /* Success Animation */
+    .success-animation {
+      display: none;
+      text-align: center;
+      color: #2a9d8f;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    footer {
+      background: black;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo" onclick="window.location.href='index.html'">LegalEase</div>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="scan-doc.html">Scan Doc</a></li>
+        <li><a href="review-docs.html">Review Docs</a></li>
+        <li><a href="profile.html" class="active">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Personal Profile</h1>
+    <div class="subtitle">Help us personalize your legal document analysis by sharing your information</div>
+
+    <form id="profileForm">
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="fas fa-user section-icon"></i>
+          Personal Information
+        </h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" name="firstName" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" name="lastName" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="age">Age Range</label>
+            <select id="age" name="age">
+              <option value="">Select age range</option>
+              <option value="18-25">18-25</option>
+              <option value="26-35">26-35</option>
+              <option value="36-45">36-45</option>
+              <option value="46-55">46-55</option>
+              <option value="56-65">56-65</option>
+              <option value="65+">65+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" placeholder="City, State/Province">
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Information -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="fas fa-chart-line section-icon"></i>
+          Financial Profile
+        </h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="income">Annual Income Range</label>
+            <select id="income" name="income">
+              <option value="">Select income range</option>
+              <option value="under-25k">Under $25,000</option>
+              <option value="25k-50k">$25,000 - $50,000</option>
+              <option value="50k-75k">$50,000 - $75,000</option>
+              <option value="75k-100k">$75,000 - $100,000</option>
+              <option value="100k-150k">$100,000 - $150,000</option>
+              <option value="150k-250k">$150,000 - $250,000</option>
+              <option value="250k+">$250,000+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="creditScore">Credit Score Range</label>
+            <select id="creditScore" name="creditScore">
+              <option value="">Select credit score</option>
+              <option value="poor">Poor (300-579)</option>
+              <option value="fair">Fair (580-669)</option>
+              <option value="good">Good (670-739)</option>
+              <option value="very-good">Very Good (740-799)</option>
+              <option value="excellent">Excellent (800-850)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="financialGoals">Primary Financial Goals</label>
+          <textarea id="financialGoals" name="financialGoals" placeholder="Describe your main financial objectives (e.g., buying a home, starting a business, retirement planning)"></textarea>
+        </div>
+      </div>
+
+      <!-- Risk Tolerance -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="fas fa-shield-alt section-icon"></i>
+          Risk Preferences
+        </h2>
+        <div class="slider-group">
+          <div class="slider-label">
+            <label for="riskTolerance">Risk Tolerance Level</label>
+            <span class="slider-value" id="riskValue">5</span>
+          </div>
+          <input type="range" id="riskTolerance" name="riskTolerance" min="1" max="10" value="5" class="slider">
+          <div style="display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+            <span>Conservative</span>
+            <span>Moderate</span>
+            <span>Aggressive</span>
+          </div>
+        </div>
+        
+        <div class="slider-group">
+          <div class="slider-label">
+            <label for="budgetFlexibility">Budget Flexibility</label>
+            <span class="slider-value" id="budgetValue">5</span>
+          </div>
+          <input type="range" id="budgetFlexibility" name="budgetFlexibility" min="1" max="10" value="5" class="slider">
+          <div style="display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+            <span>Very Tight</span>
+            <span>Flexible</span>
+            <span>Very Flexible</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Priorities -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="fas fa-bullseye section-icon"></i>
+          Document Analysis Priorities
+        </h2>
+        <p style="color: #666; margin-bottom: 1.5rem;">Select what's most important to you when reviewing legal documents:</p>
+        <div class="priority-cards">
+          <div class="priority-card" data-priority="cost">
+            <div class="priority-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h4>Cost Analysis</h4>
+            <p>Focus on fees, hidden costs, and financial obligations</p>
+          </div>
+          <div class="priority-card" data-priority="risk">
+            <div class="priority-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h4>Risk Assessment</h4>
+            <p>Highlight potential risks and liability issues</p>
+          </div>
+          <div class="priority-card" data-priority="terms">
+            <div class="priority-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h4>Terms & Conditions</h4>
+            <p>Analyze contract duration, renewal, and exit clauses</p>
+          </div>
+          <div class="priority-card" data-priority="benefits">
+            <div class="priority-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h4>Benefits & Perks</h4>
+            <p>Identify advantages and value propositions</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="fas fa-cog section-icon"></i>
+          Analysis Preferences
+        </h2>
+        <div class="checkbox-group">
+          <div class="checkbox-item">
+            <input type="checkbox" id="detailedAnalysis" name="preferences" value="detailed">
+            <label for="detailedAnalysis">Detailed clause-by-clause analysis</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="comparisons" name="preferences" value="comparisons">
+            <label for="comparisons">Compare with industry standards</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="negotiations" name="preferences" value="negotiations">
+            <label for="negotiations">Negotiation tips and suggestions</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="alternatives" name="preferences" value="alternatives">
+            <label for="alternatives">Alternative options and recommendations</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="legal-plain" name="preferences" value="plain-language">
+            <label for="legal-plain">Plain language explanations</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="visual-summaries" name="preferences" value="visual">
+            <label for="visual-summaries">Visual summaries and charts</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save Section -->
+      <div class="save-section">
+        <button type="submit" class="save-btn">
+          <i class="fas fa-save"></i> Save Profile
+        </button>
+        <div class="success-animation" id="successMessage">
+          <i class="fas fa-check-circle"></i> Profile saved successfully!
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LegalEase | Built with MERN</p>
+  </footer>
+
+  <script>
+    // Risk tolerance slider
+    const riskSlider = document.getElementById('riskTolerance');
+    const riskValue = document.getElementById('riskValue');
+    
+    riskSlider.addEventListener('input', () => {
+      riskValue.textContent = riskSlider.value;
+    });
+
+    // Budget flexibility slider
+    const budgetSlider = document.getElementById('budgetFlexibility');
+    const budgetValue = document.getElementById('budgetValue');
+    
+    budgetSlider.addEventListener('input', () => {
+      budgetValue.textContent = budgetSlider.value;
+    });
+
+    // Priority cards selection
+    const priorityCards = document.querySelectorAll('.priority-card');
+    let selectedPriorities = [];
+
+    priorityCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const priority = card.dataset.priority;
+        
+        if (card.classList.contains('selected')) {
+          card.classList.remove('selected');
+          selectedPriorities = selectedPriorities.filter(p => p !== priority);
+        } else {
+          card.classList.add('selected');
+          selectedPriorities.push(priority);
+        }
+      });
+    });
+
+    // Form submission
+    const profileForm = document.getElementById('profileForm');
+    const successMessage = document.getElementById('successMessage');
+
+    profileForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Simulate saving process
+      const saveBtn = document.querySelector('.save-btn');
+      const originalText = saveBtn.innerHTML;
+      
+      saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      saveBtn.disabled = true;
+      
+      setTimeout(() => {
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+        successMessage.style.display = 'block';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+        }, 3000);
+        
+        // Optionally redirect to dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+      }, 1500);
+    });
+
+    // Auto-save draft functionality (optional)
+    const formInputs = profileForm.querySelectorAll('input, select, textarea');
+    
+    formInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        // Save to localStorage as draft
+        const formData = new FormData(profileForm);
+        const data = Object.fromEntries(formData);
+        data.selectedPriorities = selectedPriorities;
+        localStorage.setItem('legalease-profile-draft', JSON.stringify(data));
+      });
+    });
+
+    // Load draft on page load
+    window.addEventListener('load', () => {
+      const draft = localStorage.getItem('legalease-profile-draft');
+      if (draft) {
+        const data = JSON.parse(draft);
+        
+        // Fill form fields
+        Object.keys(data).forEach(key => {
+          const field = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+          if (field && key !== 'selectedPriorities') {
+            field.value = data[key];
+          }
+        });
+        
+        // Select priority cards
+        if (data.selectedPriorities) {
+          data.selectedPriorities.forEach(priority => {
+            const card = document.querySelector(`[data-priority="${priority}"]`);
+            if (card) {
+              card.classList.add('selected');
+            }
+          });
+          selectedPriorities = data.selectedPriorities;
+        }
+        
+        // Update slider values
+        riskValue.textContent = riskSlider.value;
+        budgetValue.textContent = budgetSlider.value;
+      }
+    });
+  </script>
+
+</body>
+</html>
