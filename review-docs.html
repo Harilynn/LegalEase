@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!doctype html>
 <html lang="en">
 <head>
@@ -201,3 +202,208 @@
 
 </body>
 </html>
+=======
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LegalEase | Review Documents</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+    .navbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      font-family: "Playfair Display", serif;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav-links li a:hover { text-decoration: underline; }
+
+    /* Main */
+    main {
+      flex: 1;
+      margin-top: 90px;
+      padding: 2rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1 {
+      font-family: "Playfair Display", serif;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #555;
+      margin-bottom: 2rem;
+    }
+
+    /* Table */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .doc-table th, .doc-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .doc-table th {
+      background: #f8f8f8;
+      font-weight: bold;
+      color: #333;
+    }
+    .doc-table tr:last-child td { border-bottom: none; }
+
+    /* Risk Labels */
+    .risk-high { color: #e63946; font-weight: bold; }
+    .risk-medium { color: #d4a017; font-weight: bold; }
+    .risk-low { color: #2a9d8f; font-weight: bold; }
+
+    /* Buttons */
+    .btn {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-right: 6px;
+    }
+    .btn i { margin-right: 5px; }
+    .btn-review { background: #2a9d8f; color: #fff; }
+    .btn-download { background: #333; color: #fff; }
+    .btn-delete { background: #e63946; color: #fff; }
+    .btn:hover { opacity: 0.85; }
+
+    /* Footer */
+    footer {
+      background: black;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo">LegalEase</div>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="scan-doc.html">Scan Doc</a></li>
+        <li><a href="review-docs.html">Review Docs</a></li>
+        <li><a href="profile.html">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Review Documents</h1>
+    <div class="subtitle">Check risks, benefits, and manage your uploaded documents</div>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Uploaded On</th>
+          <th>Risk Level</th>
+          <th>Insights</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Loan Agreement.pdf</td>
+          <td>Jan 14, 2025</td>
+          <td class="risk-high">High</td>
+          <td>2 risks, 1 benefit</td>
+          <td>
+            <button class="btn btn-review"><i class="fas fa-eye"></i> Review</button>
+            <button class="btn btn-download"><i class="fas fa-download"></i> Download</button>
+            <button class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Rental Contract.docx</td>
+          <td>Feb 3, 2025</td>
+          <td class="risk-medium">Medium</td>
+          <td>1 risk, 2 benefits</td>
+          <td>
+            <button class="btn btn-review"><i class="fas fa-eye"></i> Review</button>
+            <button class="btn btn-download"><i class="fas fa-download"></i> Download</button>
+            <button class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Service Agreement.pdf</td>
+          <td>Feb 10, 2025</td>
+          <td class="risk-low">Low</td>
+          <td>0 risks, 3 benefits</td>
+          <td>
+            <button class="btn btn-review"><i class="fas fa-eye"></i> Review</button>
+            <button class="btn btn-download"><i class="fas fa-download"></i> Download</button>
+            <button class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LegalEase | Built with MERN</p>
+  </footer>
+
+</body>
+</html>
+>>>>>>> 66b3215b7e2bf10c1dacdf6125f27062a1442e1a

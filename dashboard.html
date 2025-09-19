@@ -1,3 +1,190 @@
+<<<<<<< HEAD
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LegalEase | Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link href="dashboard.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo">LegalEase</div>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="scan-doc.html">Scan Doc</a></li>
+        <li><a href="profile.html">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Dashboard</h1>
+    <div class="subtitle">Your document insights at a glance</div>
+
+    <!-- Stats Row -->
+    <div class="stats">
+      <div class="card">
+        <h3><i class="fas fa-file-alt"></i> Total Documents</h3>
+        <div class="value">12</div>
+        <div class="desc">+3 this month</div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-exclamation-triangle"></i> High Risk Issues</h3>
+        <div class="value red">8</div>
+        <div class="desc">Needs review</div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-check-circle"></i> Benefits Found</h3>
+        <div class="value green">15</div>
+        <div class="desc">Detected in 6 docs</div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-chart-line"></i> Avg Risk Score</h3>
+        <div class="value gold">62</div>
+        <div class="desc">Medium level</div>
+      </div>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Left: Graph -->
+      <div class="panel">
+        <h2><i class="fas fa-chart-bar"></i> Risk Distribution</h2>
+        <canvas id="riskChart"></canvas>
+      </div>
+
+      <!-- Right: Activity -->
+      <div class="panel">
+        <h2><i class="fas fa-history"></i> Recent Activity</h2>
+        <ul class="activity-list">
+          <li class="activity-item"><i class="fas fa-file-alt"></i> Uploaded Loan Agreement</li>
+          <li class="activity-item"><i class="fas fa-exclamation-triangle"></i> 2 High Risks flagged</li>
+          <li class="activity-item"><i class="fas fa-check-circle"></i> Found 1 Benefit</li>
+          <li class="activity-item"><i class="fas fa-file-alt"></i> Uploaded Rental Contract</li>
+        </ul>
+      </div>
+
+      <!-- Full-width Chart -->
+      <div class="panel" style="grid-column: 1 / -1;">
+        <h2><i class="fas fa-chart-line"></i> Documents Uploaded Over Time</h2>
+        <canvas id="docsChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent Documents -->
+    <div class="panel" style="margin-top:2rem;">
+      <h2><i class="fas fa-file-alt"></i> Recent Documents</h2>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>Uploaded On</th>
+            <th>Risk</th>
+            <th>Insights</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Loan Agreement.pdf</td>
+            <td>Jan 14, 2025</td>
+            <td class="risk-high">High</td>
+            <td>2 risks, 1 benefit</td>
+          </tr>
+          <tr>
+            <td>Rental Contract.docx</td>
+            <td>Feb 3, 2025</td>
+            <td class="risk-medium">Medium</td>
+            <td>1 risk, 2 benefits</td>
+          </tr>
+          <tr>
+            <td>Service Agreement.pdf</td>
+            <td>Feb 10, 2025</td>
+            <td class="risk-low">Low</td>
+            <td>0 risks, 3 benefits</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="text-align:right; margin-top:1rem;">
+        <a href="review-docs.html" class="btn" style="background:#111; color:white; text-decoration:none;">
+          See More <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Chatbot Bubble -->
+  <div id="chatbot-bubble" 
+       style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
+              border-radius: 50%; background: #111; color: #fff; display: flex;
+              justify-content: center; align-items: center; font-size: 1.5rem;
+              cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 200;">
+    <i class="fas fa-comment-alt"></i>
+  </div>
+
+  <!-- Collapsible Chatbot Window -->
+  <div id="chatbot-window" 
+       style="position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px;
+              background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+              display: none; flex-direction: column; overflow: hidden; z-index: 300;">
+    
+    <!-- Header -->
+    <div class="chat-header" 
+         style="background: #000; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
+      <span style="display:flex; align-items:center; gap:6px;">
+        <i class="fas fa-balance-scale"></i> LegalEase Chatbot
+      </span>
+      <div style="display:flex; gap:10px;">
+        <button id="expand-btn" style="background: transparent; border: none; color: #fff; cursor: pointer;">
+          <i class="fas fa-external-link-alt"></i>
+        </button>
+        <button id="close-chat" style="background: transparent; border: none; color: #fff; cursor: pointer;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Body -->
+    <div id="chatbot-messages" class="chat-body" 
+         style="flex: 1; padding: 1rem; overflow-y: auto; background:#f8f8f8; display:flex; flex-direction:column;">
+    </div>
+
+    <!-- Composer -->
+    <div class="composer" 
+         style="display:flex; gap:8px; padding:10px; border-top:1px solid #ddd; background:#fafafa;">
+      <textarea id="chatbot-input" placeholder="Type your question here..." 
+                style="flex:1; resize:none; padding:10px; border-radius:10px; border:1px solid #ccc; font-size:14px;"></textarea>
+      <button id="chatbot-send" 
+              style="background:black; color:white; border:none; padding:0 16px; border-radius:10px; cursor:pointer;">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LegalEase | Built with MERN</p>
+  </footer>
+
+  <!-- Load JS last -->
+  <script src="dashboard.js"></script>
+</body>
+</html>
+=======
 <!doctype html>
 <html lang="en">
 <head>
@@ -575,3 +762,4 @@
 
 </body>
 </html>
+>>>>>>> 49ca3e97e1f441efbe8a022dea4cb48bc4dcdea8

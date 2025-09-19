@@ -1,0 +1,189 @@
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+    .navbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      font-family: "Playfair Display", serif;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav-links li a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Layout */
+    main {
+      flex: 1;
+      margin-top: 90px;
+      padding: 2rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+    }
+    .subtitle {
+      color: #555;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Stats Row */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.25s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #444;
+    }
+    .card .value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 0.4rem 0;
+    }
+    .card .desc {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    .red { color: #e63946; }
+    .green { color: #2a9d8f; }
+    .gold { color: #d4a017; }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .panel h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-family: "Playfair Display", serif;
+    }
+
+    /* Table */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .doc-table th, .doc-table td {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .doc-table th {
+      background: #f8f8f8;
+      font-weight: bold;
+      color: #333;
+    }
+    .doc-table tr:last-child td {
+      border-bottom: none;
+    }
+    .risk-high { color: #e63946; font-weight: bold; }
+    .risk-medium { color: #d4a017; font-weight: bold; }
+    .risk-low { color: #2a9d8f; font-weight: bold; }
+
+    /* Recent Activity */
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: #444;
+    }
+    .activity-item i { color: #2a9d8f; }
+
+    /* Chat Bubbles */
+    .bubble {
+      margin: 6px 0;
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 75%;
+      line-height: 1.4;
+      font-size: 14px;
+      animation: fadeIn 0.3s ease;
+    }
+    .user { align-self: flex-end; background: #ddd; color: #000; }
+    .bot { align-self: flex-start; background: #111; color: #fff; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    footer {
+      background: black;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
