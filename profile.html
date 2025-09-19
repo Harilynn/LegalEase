@@ -1,0 +1,2006 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LegalEase | Profile</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .navbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      font-family: "Playfair Display", serif;
+      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .logo::after {
+      content: '⚖️';
+      margin-left: 8px;
+      animation: scaleBalance 3s ease-in-out infinite;
+      display: inline-block;
+    }
+    .logo:hover {
+      color: #e0e0e0;
+      transform: scale(1.05);
+      text-shadow: 0 4px 16px rgba(255, 255, 255, 0.6);
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-links li a {
+      display: block;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-links li a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.6s ease;
+    }
+    .nav-links li a:hover::before {
+      left: 100%;
+    }
+    .nav-links li a:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #f0f0f0;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
+    }
+    .nav-links li a.active {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #f0f0f0;
+    }
+
+    @keyframes scaleBalance {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-5deg) scale(1.1); }
+      75% { transform: rotate(5deg) scale(1.1); }
+    }
+
+    /* Profile Navigation Tabs */
+    .profile-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow-x: auto;
+    }
+    .profile-tab {
+      padding: 0.8rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #ccc;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+    .profile-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .profile-tab.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    }
+    .profile-tab-content {
+      display: none;
+    }
+    .profile-tab-content.active {
+      display: block;
+    }
+
+    /* Enhanced Profile Header */
+    .profile-cover {
+      height: 200px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      border-radius: 15px 15px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .profile-cover:hover .cover-overlay {
+      opacity: 1;
+    }
+    .edit-cover-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+    .edit-cover-btn:hover {
+      background: #fff;
+      transform: scale(1.05);
+    }
+
+    .profile-info {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0 0 15px 15px;
+      padding: 2rem;
+      position: relative;
+      margin-top: -60px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: none;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .profile-avatar-container {
+      position: relative;
+    }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .profile-avatar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .edit-avatar-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .edit-avatar-btn:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+    .status-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid #000;
+    }
+    .status-indicator.online {
+      background: #4caf50;
+    }
+    .status-indicator.away {
+      background: #ff9800;
+    }
+    .status-indicator.offline {
+      background: #9e9e9e;
+    }
+
+    .profile-details {
+      padding-top: 60px;
+    }
+    .profile-name {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-family: "Playfair Display", serif;
+      color: #fff;
+      font-weight: 600;
+    }
+    .profile-title {
+      color: #ccc;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .profile-location {
+      color: #888;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .profile-bio {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+    }
+    .profile-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge.premium {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #333;
+    }
+    .badge.verified {
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      color: #fff;
+    }
+    .badge.expert {
+      background: linear-gradient(135deg, #8e24aa, #ab47bc);
+      color: #fff;
+    }
+
+    .profile-actions {
+      padding-top: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    /* Statistics Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .stat-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    }
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+    .stat-info {
+      flex: 1;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+    .stat-label {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+    .stat-change {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .stat-change.positive {
+      color: #4caf50;
+    }
+    .stat-change.negative {
+      color: #f44336;
+    }
+
+    /* Overview Grid */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .overview-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Activity Timeline */
+    .activity-timeline {
+      space-y: 1rem;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+    .timeline-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .timeline-icon.high-risk {
+      background: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+    }
+    .timeline-icon.success {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4caf50;
+    }
+    .timeline-icon.info {
+      background: rgba(33, 150, 243, 0.2);
+      color: #2196f3;
+    }
+    .timeline-icon.achievement {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+    .timeline-content {
+      flex: 1;
+    }
+    .timeline-title {
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+    .timeline-desc {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+    .timeline-time {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    /* Achievements */
+    .achievements-grid {
+      display: grid;
+      gap: 1rem;
+    }
+    .achievement-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .achievement-item.earned {
+      border-left: 3px solid #4caf50;
+    }
+    .achievement-item.locked {
+      border-left: 3px solid #666;
+      opacity: 0.6;
+    }
+    .achievement-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .achievement-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .achievement-info {
+      flex: 1;
+    }
+    .achievement-name {
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+    .achievement-desc {
+      color: #ccc;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+    .achievement-progress {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    /* Skills Section */
+    .skills-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 2rem;
+    }
+    .skills-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .skill-item {
+      display: grid;
+      gap: 0.5rem;
+    }
+    .skill-name {
+      color: #fff;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .skill-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50, #66bb6a);
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+    .skill-level {
+      color: #ccc;
+      font-size: 0.8rem;
+    }
+
+    /* Form Styles */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .form-group select:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .view-all-btn {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    /* Profile Content */
+    .profile-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .profile-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      font-family: "Playfair Display", serif;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #ccc;
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Recent Activity */
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 3px solid #555;
+      transition: all 0.3s ease;
+    }
+    .activity-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(5px);
+    }
+    .activity-icon {
+      font-size: 1.5rem;
+      color: #888;
+      width: 40px;
+      text-align: center;
+    }
+    .activity-content {
+      flex: 1;
+    }
+    .activity-title {
+      color: #fff;
+      margin-bottom: 0.2rem;
+      font-weight: 500;
+    }
+    .activity-time {
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #333, #555);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #555, #777);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    main {
+      margin-top: 90px;
+      padding: 2rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      flex: 1;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 2rem;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* Additional styles for new features */
+    .security-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .security-item:last-child {
+      border-bottom: none;
+    }
+    .security-info h4 {
+      color: #fff;
+      margin: 0 0 0.3rem 0;
+      font-size: 1rem;
+    }
+    .security-info p {
+      color: #ccc;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .status-enabled {
+      color: #4caf50 !important;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #666;
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    input:checked + .toggle-slider {
+      background-color: #4caf50;
+    }
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    
+    .sessions-list {
+      margin-bottom: 1.5rem;
+    }
+    .session-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 3px solid #555;
+    }
+    .session-item.current {
+      border-left-color: #4caf50;
+    }
+    .session-device {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .current-badge {
+      background: #4caf50;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+    }
+    .session-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+    .btn-warning {
+      background: #ff9800;
+      color: white;
+    }
+    .btn-warning:hover {
+      background: #f57c00;
+    }
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #d32f2f;
+    }
+    
+    .danger-zone {
+      border: 1px solid rgba(244, 67, 54, 0.3);
+      background: rgba(244, 67, 54, 0.05);
+    }
+    .danger-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .danger-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(244, 67, 54, 0.2);
+    }
+    .danger-item:last-child {
+      border-bottom: none;
+    }
+    .danger-info h4 {
+      color: #fff;
+      margin: 0 0 0.3rem 0;
+    }
+    .danger-info p {
+      color: #ccc;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    
+    .security-score {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .security-recommendations {
+      flex: 1;
+    }
+    .security-recommendations h4 {
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .security-recommendations ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .security-recommendations li {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .security-recommendations li.completed {
+      color: #4caf50;
+    }
+    .security-recommendations li.pending {
+      color: #ff9800;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="logo">LegalEase</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="review-docs.html">Review Docs</a></li>
+        <li><a href="scan-doc.html">Scan Doc</a></li>
+        <li><a href="profile.html" class="active">Profile</a></li>
+        <li><a href="chatbot.html">Chat</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Profile Navigation Tabs -->
+    <div class="profile-nav">
+      <button class="profile-tab active" onclick="showProfileTab('overview')">
+        <i class="fas fa-user"></i> Overview
+      </button>
+      <button class="profile-tab" onclick="showProfileTab('personal')">
+        <i class="fas fa-id-card"></i> Personal Info
+      </button>
+      <button class="profile-tab" onclick="showProfileTab('preferences')">
+        <i class="fas fa-cog"></i> Preferences
+      </button>
+      <button class="profile-tab" onclick="showProfileTab('security')">
+        <i class="fas fa-shield-alt"></i> Security
+      </button>
+      <button class="profile-tab" onclick="showProfileTab('analytics')">
+        <i class="fas fa-chart-bar"></i> Analytics
+      </button>
+      <button class="profile-tab" onclick="showProfileTab('documents')">
+        <i class="fas fa-file-alt"></i> Documents
+      </button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="profile-tab-content active">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-cover">
+          <div class="cover-overlay">
+            <button class="edit-cover-btn">
+              <i class="fas fa-camera"></i> Change Cover
+            </button>
+          </div>
+        </div>
+        <div class="profile-info">
+          <div class="profile-avatar-container">
+            <div class="profile-avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Profile" id="profileImage">
+              <button class="edit-avatar-btn">
+                <i class="fas fa-camera"></i>
+              </button>
+            </div>
+            <div class="status-indicator online" title="Online"></div>
+          </div>
+          <div class="profile-details">
+            <h1 class="profile-name">John Doe</h1>
+            <div class="profile-title">Senior Legal Analyst</div>
+            <div class="profile-location">
+              <i class="fas fa-map-marker-alt"></i> New York, NY
+            </div>
+            <div class="profile-bio">
+              Experienced legal professional specializing in contract analysis, risk assessment, and legal document review. Passionate about leveraging AI to streamline legal processes.
+            </div>
+            <div class="profile-badges">
+              <span class="badge premium">Premium Member</span>
+              <span class="badge verified">Verified</span>
+              <span class="badge expert">Expert Analyst</span>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-primary">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+            <button class="btn btn-secondary">
+              <i class="fas fa-share"></i> Share Profile
+            </button>
+            <button class="btn btn-secondary">
+              <i class="fas fa-download"></i> Export Data
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-file-contract"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">247</div>
+            <div class="stat-label">Documents Analyzed</div>
+            <div class="stat-change positive">+12 this month</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">89</div>
+            <div class="stat-label">Risk Assessments</div>
+            <div class="stat-change positive">+5 this week</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">94%</div>
+            <div class="stat-label">Accuracy Rate</div>
+            <div class="stat-change positive">+2% improvement</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">156h</div>
+            <div class="stat-label">Time Saved</div>
+            <div class="stat-change positive">+23h this month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity & Achievements -->
+      <div class="overview-grid">
+        <div class="overview-section">
+          <h3 class="section-title">
+            <i class="fas fa-history"></i> Recent Activity
+          </h3>
+          <div class="activity-timeline">
+            <div class="timeline-item">
+              <div class="timeline-icon high-risk">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">High Risk Contract Flagged</div>
+                <div class="timeline-desc">Employment agreement with concerning liability clauses</div>
+                <div class="timeline-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon success">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">Analysis Completed</div>
+                <div class="timeline-desc">NDA review finished with recommendations</div>
+                <div class="timeline-time">4 hours ago</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon info">
+                <i class="fas fa-upload"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">Document Uploaded</div>
+                <div class="timeline-desc">Service agreement uploaded for analysis</div>
+                <div class="timeline-time">1 day ago</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon achievement">
+                <i class="fas fa-award"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">Achievement Unlocked</div>
+                <div class="timeline-desc">"Risk Detective" - 50 risk assessments completed</div>
+                <div class="timeline-time">2 days ago</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-secondary view-all-btn">View All Activity</button>
+        </div>
+
+        <div class="overview-section">
+          <h3 class="section-title">
+            <i class="fas fa-trophy"></i> Achievements
+          </h3>
+          <div class="achievements-grid">
+            <div class="achievement-item earned">
+              <div class="achievement-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="achievement-info">
+                <div class="achievement-name">First Analysis</div>
+                <div class="achievement-desc">Complete your first document analysis</div>
+              </div>
+            </div>
+            <div class="achievement-item earned">
+              <div class="achievement-icon">
+                <i class="fas fa-fire"></i>
+              </div>
+              <div class="achievement-info">
+                <div class="achievement-name">On Fire</div>
+                <div class="achievement-desc">Analyze 5 documents in one day</div>
+              </div>
+            </div>
+            <div class="achievement-item earned">
+              <div class="achievement-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="achievement-info">
+                <div class="achievement-name">Risk Detective</div>
+                <div class="achievement-desc">Identify 50 high-risk clauses</div>
+              </div>
+            </div>
+            <div class="achievement-item locked">
+              <div class="achievement-icon">
+                <i class="fas fa-crown"></i>
+              </div>
+              <div class="achievement-info">
+                <div class="achievement-name">Legal Expert</div>
+                <div class="achievement-desc">Complete 100 analyses</div>
+                <div class="achievement-progress">78/100</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills & Expertise -->
+      <div class="skills-section">
+        <h3 class="section-title">
+          <i class="fas fa-brain"></i> Skills & Expertise
+        </h3>
+        <div class="skills-grid">
+          <div class="skill-item">
+            <div class="skill-name">Contract Analysis</div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="width: 95%"></div>
+            </div>
+            <div class="skill-level">Expert (95%)</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Risk Assessment</div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="width: 88%"></div>
+            </div>
+            <div class="skill-level">Advanced (88%)</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Legal Research</div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="width: 92%"></div>
+            </div>
+            <div class="skill-level">Expert (92%)</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Document Review</div>
+            <div class="skill-bar">
+              <div class="skill-fill" style="width: 89%"></div>
+            </div>
+            <div class="skill-level">Advanced (89%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Info Tab -->
+    <div id="personal" class="profile-tab-content">
+      <div class="profile-section">
+        <h3 class="section-title">
+          <i class="fas fa-user"></i> Personal Information
+        </h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" value="John">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" value="Doe">
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" value="john.doe@legalease.com">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" value="+1 (555) 123-4567">
+          </div>
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" value="1990-05-15">
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+              <option value="prefer-not-to-say">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3 class="section-title">
+          <i class="fas fa-briefcase"></i> Professional Information
+        </h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" value="Senior Legal Analyst">
+          </div>
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" value="LegalTech Solutions Inc.">
+          </div>
+          <div class="form-group">
+            <label for="experience">Years of Experience</label>
+            <select id="experience">
+              <option value="0-1">0-1 years</option>
+              <option value="2-5">2-5 years</option>
+              <option value="6-10" selected>6-10 years</option>
+              <option value="11-15">11-15 years</option>
+              <option value="16+">16+ years</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="specialization">Specialization</label>
+            <select id="specialization">
+              <option value="contract-law" selected>Contract Law</option>
+              <option value="corporate-law">Corporate Law</option>
+              <option value="employment-law">Employment Law</option>
+              <option value="intellectual-property">Intellectual Property</option>
+              <option value="litigation">Litigation</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="license">Bar License Number</label>
+            <input type="text" id="license" value="NY-123456789">
+          </div>
+          <div class="form-group">
+            <label for="jurisdiction">Jurisdiction</label>
+            <input type="text" id="jurisdiction" value="New York, California">
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3 class="section-title">
+          <i class="fas fa-map-marker-alt"></i> Address Information
+        </h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="street">Street Address</label>
+            <input type="text" id="street" value="123 Legal Street">
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" value="New York">
+          </div>
+          <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" id="state" value="NY">
+          </div>
+          <div class="form-group">
+            <label for="zipCode">ZIP Code</label>
+            <input type="text" id="zipCode" value="10001">
+          </div>
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country">
+              <option value="us" selected>United States</option>
+              <option value="ca">Canada</option>
+              <option value="uk">United Kingdom</option>
+              <option value="au">Australia</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="savePersonalInfo()">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+        <button class="btn btn-secondary" onclick="resetPersonalInfo()">
+          <i class="fas fa-undo"></i> Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Add other tab contents here... -->
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LegalEase | Built with MERN</p>
+  </footer>
+
+  <script>
+    // Global variables
+    let currentProfileTab = 'overview';
+    let profileData = {
+      personal: {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@legalease.com',
+        phone: '+1 (555) 123-4567',
+        dateOfBirth: '1990-05-15',
+        gender: 'male'
+      },
+      professional: {
+        jobTitle: 'Senior Legal Analyst',
+        company: 'LegalTech Solutions Inc.',
+        experience: '6-10',
+        specialization: 'contract-law',
+        license: 'NY-123456789',
+        jurisdiction: 'New York, California'
+      },
+      address: {
+        street: '123 Legal Street',
+        city: 'New York',
+        state: 'NY',
+        zipCode: '10001',
+        country: 'us'
+      },
+      preferences: {
+        notifications: 'important',
+        language: 'en',
+        timezone: 'utc-5',
+        theme: 'dark',
+        emailFrequency: 'weekly'
+      }
+    };
+
+    // Initialize profile functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize profile tabs
+      initializeProfileTabs();
+      
+      // Load user preferences
+      loadUserPreferences();
+      
+      // Setup event listeners
+      setupEventListeners();
+      
+      // Animate skill bars
+      setTimeout(animateSkillBars, 500);
+      
+      // Start activity updates
+      startActivityUpdates();
+    });
+
+    // Profile tab switching
+    function showProfileTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.profile-tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      const selectedContent = document.getElementById(tabName);
+      if (selectedContent) {
+        selectedContent.classList.add('active');
+      }
+      
+      // Add active class to clicked tab
+      event.target.classList.add('active');
+      
+      currentProfileTab = tabName;
+      
+      // Load tab-specific content
+      loadTabContent(tabName);
+    }
+
+    // Initialize profile tabs
+    function initializeProfileTabs() {
+      // Set default active tab
+      const defaultTab = document.querySelector('.profile-tab[onclick*="overview"]');
+      if (defaultTab) {
+        defaultTab.classList.add('active');
+      }
+      
+      // Show default content
+      const defaultContent = document.getElementById('overview');
+      if (defaultContent) {
+        defaultContent.classList.add('active');
+      }
+    }
+
+    // Load tab-specific content
+    function loadTabContent(tabName) {
+      switch(tabName) {
+        case 'preferences':
+          loadPreferencesTab();
+          break;
+        case 'security':
+          loadSecurityTab();
+          break;
+        case 'analytics':
+          loadAnalyticsTab();
+          break;
+        case 'documents':
+          loadDocumentsTab();
+          break;
+      }
+    }
+
+    // Load preferences tab
+    function loadPreferencesTab() {
+      if (document.getElementById('preferences')) return; // Already loaded
+      
+      const preferencesContent = `
+        <div class="profile-section">
+          <h3 class="section-title">
+            <i class="fas fa-bell"></i> Notification Preferences
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="emailNotifications">Email Notifications</label>
+              <select id="emailNotifications">
+                <option value="all">All notifications</option>
+                <option value="important" selected>Important only</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pushNotifications">Push Notifications</label>
+              <select id="pushNotifications">
+                <option value="enabled" selected>Enabled</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="emailFrequency">Email Frequency</label>
+              <select id="emailFrequency">
+                <option value="instant">Instant</option>
+                <option value="daily">Daily digest</option>
+                <option value="weekly" selected>Weekly digest</option>
+                <option value="monthly">Monthly digest</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="riskAlerts">Risk Alerts</label>
+              <select id="riskAlerts">
+                <option value="all" selected>All risk levels</option>
+                <option value="high-only">High risk only</option>
+                <option value="critical-only">Critical only</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3 class="section-title">
+            <i class="fas fa-globe"></i> Localization
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="language">Language</label>
+              <select id="language">
+                <option value="en" selected>English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="it">Italian</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="timezone">Timezone</label>
+              <select id="timezone">
+                <option value="utc-5" selected>UTC-5 (Eastern)</option>
+                <option value="utc-6">UTC-6 (Central)</option>
+                <option value="utc-7">UTC-7 (Mountain)</option>
+                <option value="utc-8">UTC-8 (Pacific)</option>
+                <option value="utc+0">UTC+0 (GMT)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="dateFormat">Date Format</label>
+              <select id="dateFormat">
+                <option value="mm-dd-yyyy" selected>MM/DD/YYYY</option>
+                <option value="dd-mm-yyyy">DD/MM/YYYY</option>
+                <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="timeFormat">Time Format</label>
+              <select id="timeFormat">
+                <option value="12hour" selected>12 Hour (AM/PM)</option>
+                <option value="24hour">24 Hour</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3 class="section-title">
+            <i class="fas fa-palette"></i> Appearance
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="theme">Theme</label>
+              <select id="theme">
+                <option value="dark" selected>Dark</option>
+                <option value="light">Light</option>
+                <option value="auto">Auto</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fontSize">Font Size</label>
+              <select id="fontSize">
+                <option value="small">Small</option>
+                <option value="medium" selected>Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="compactMode">Compact Mode</label>
+              <select id="compactMode">
+                <option value="enabled">Enabled</option>
+                <option value="disabled" selected>Disabled</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="animations">Animations</label>
+              <select id="animations">
+                <option value="enabled" selected>Enabled</option>
+                <option value="reduced">Reduced</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="savePreferences()">
+            <i class="fas fa-save"></i> Save Preferences
+          </button>
+          <button class="btn btn-secondary" onclick="resetPreferences()">
+            <i class="fas fa-undo"></i> Reset to Default
+          </button>
+        </div>
+      `;
+      
+      // Create and append preferences tab
+      const preferencesTab = document.createElement('div');
+      preferencesTab.id = 'preferences';
+      preferencesTab.className = 'profile-tab-content';
+      preferencesTab.innerHTML = preferencesContent;
+      
+      document.querySelector('main').appendChild(preferencesTab);
+    }
+
+    // Load security tab
+    function loadSecurityTab() {
+      if (document.getElementById('security')) return; // Already loaded
+      
+      const securityContent = `
+        <div class="profile-section">
+          <h3 class="section-title">
+            <i class="fas fa-key"></i> Password & Authentication
+          </h3>
+          <div class="security-item">
+            <div class="security-info">
+              <h4>Password</h4>
+              <p>Last changed 3 months ago</p>
+            </div>
+            <button class="btn btn-secondary" onclick="changePassword()">
+              <i class="fas fa-edit"></i> Change Password
+            </button>
+          </div>
+          
+          <div class="security-item">
+            <div class="security-info">
+              <h4>Two-Factor Authentication</h4>
+              <p class="status-enabled">✓ Enabled</p>
+            </div>
+            <button class="btn btn-secondary" onclick="manage2FA()">
+              <i class="fas fa-cog"></i> Manage
+            </button>
+          </div>
+          
+          <div class="security-item">
+            <div class="security-info">
+              <h4>Login Alerts</h4>
+              <p>Get notified of new sign-ins</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3 class="section-title">
+            <i class="fas fa-desktop"></i> Active Sessions
+          </h3>
+          <div class="sessions-list">
+            <div class="session-item current">
+              <div class="session-info">
+                <div class="session-device">
+                  <i class="fas fa-desktop"></i>
+                  <strong>Windows PC</strong>
+                  <span class="current-badge">Current</span>
+                </div>
+                <div class="session-details">
+                  <span>Chrome on Windows • New York, NY</span>
+                  <span>Active now</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="session-item">
+              <div class="session-info">
+                <div class="session-device">
+                  <i class="fas fa-mobile-alt"></i>
+                  <strong>iPhone</strong>
+                </div>
+                <div class="session-details">
+                  <span>LegalEase Mobile App • New York, NY</span>
+                  <span>2 hours ago</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="revokeSession('mobile-1')">
+                <i class="fas fa-times"></i> Revoke
+              </button>
+            </div>
+            
+            <div class="session-item">
+              <div class="session-info">
+                <div class="session-device">
+                  <i class="fas fa-laptop"></i>
+                  <strong>MacBook Pro</strong>
+                </div>
+                <div class="session-details">
+                  <span>Safari on macOS • Boston, MA</span>
+                  <span>1 day ago</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="revokeSession('laptop-1')">
+                <i class="fas fa-times"></i> Revoke
+              </button>
+            </div>
+          </div>
+          
+          <button class="btn btn-secondary" onclick="revokeAllSessions()">
+            <i class="fas fa-sign-out-alt"></i> Sign Out All Other Sessions
+          </button>
+        </div>
+
+        <div class="profile-section">
+          <h3 class="section-title">
+            <i class="fas fa-shield-alt"></i> Account Security
+          </h3>
+          <div class="security-score">
+            <div class="score-circle">
+              <div class="score-number">85%</div>
+              <div class="score-label">Security Score</div>
+            </div>
+            <div class="security-recommendations">
+              <h4>Recommendations</h4>
+              <ul>
+                <li class="completed">✓ Strong password enabled</li>
+                <li class="completed">✓ Two-factor authentication active</li>
+                <li class="pending">⚠ Consider updating recovery email</li>
+                <li class="pending">⚠ Add backup authentication method</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section danger-zone">
+          <h3 class="section-title">
+            <i class="fas fa-exclamation-triangle"></i> Danger Zone
+          </h3>
+          <div class="danger-actions">
+            <div class="danger-item">
+              <div class="danger-info">
+                <h4>Export Account Data</h4>
+                <p>Download a copy of all your data</p>
+              </div>
+              <button class="btn btn-secondary" onclick="exportData()">
+                <i class="fas fa-download"></i> Export Data
+              </button>
+            </div>
+            
+            <div class="danger-item">
+              <div class="danger-info">
+                <h4>Deactivate Account</h4>
+                <p>Temporarily disable your account</p>
+              </div>
+              <button class="btn btn-warning" onclick="deactivateAccount()">
+                <i class="fas fa-pause"></i> Deactivate
+              </button>
+            </div>
+            
+            <div class="danger-item">
+              <div class="danger-info">
+                <h4>Delete Account</h4>
+                <p>Permanently delete your account and all data</p>
+              </div>
+              <button class="btn btn-danger" onclick="deleteAccount()">
+                <i class="fas fa-trash"></i> Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Create and append security tab
+      const securityTab = document.createElement('div');
+      securityTab.id = 'security';
+      securityTab.className = 'profile-tab-content';
+      securityTab.innerHTML = securityContent;
+      
+      document.querySelector('main').appendChild(securityTab);
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Profile image upload
+      const profileImg = document.getElementById('profileImage');
+      if (profileImg) {
+        profileImg.addEventListener('click', function() {
+          // Create file input
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = 'image/*';
+          fileInput.onchange = handleProfileImageUpload;
+          fileInput.click();
+        });
+      }
+    }
+
+    // Handle profile image upload
+    function handleProfileImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileImage').src = e.target.result;
+          showNotification('Profile image updated successfully!', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Save personal information
+    function savePersonalInfo() {
+      // Collect form data
+      const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        dateOfBirth: document.getElementById('dateOfBirth').value,
+        gender: document.getElementById('gender').value,
+        jobTitle: document.getElementById('jobTitle').value,
+        company: document.getElementById('company').value,
+        experience: document.getElementById('experience').value,
+        specialization: document.getElementById('specialization').value,
+        license: document.getElementById('license').value,
+        jurisdiction: document.getElementById('jurisdiction').value,
+        street: document.getElementById('street').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        zipCode: document.getElementById('zipCode').value,
+        country: document.getElementById('country').value
+      };
+      
+      // Update profile data
+      Object.assign(profileData.personal, formData);
+      Object.assign(profileData.professional, formData);
+      Object.assign(profileData.address, formData);
+      
+      // Update profile name in header
+      document.querySelector('.profile-name').textContent = `${formData.firstName} ${formData.lastName}`;
+      
+      showNotification('Personal information saved successfully!', 'success');
+    }
+
+    // Reset personal information
+    function resetPersonalInfo() {
+      if (confirm('Are you sure you want to reset all personal information?')) {
+        // Reset form fields to original values
+        document.getElementById('firstName').value = profileData.personal.firstName;
+        document.getElementById('lastName').value = profileData.personal.lastName;
+        document.getElementById('email').value = profileData.personal.email;
+        // ... reset other fields
+        
+        showNotification('Personal information reset to saved values.', 'info');
+      }
+    }
+
+    // Save preferences
+    function savePreferences() {
+      const preferences = {
+        notifications: document.getElementById('emailNotifications').value,
+        language: document.getElementById('language').value,
+        timezone: document.getElementById('timezone').value,
+        theme: document.getElementById('theme').value
+      };
+      
+      Object.assign(profileData.preferences, preferences);
+      
+      showNotification('Preferences saved successfully!', 'success');
+    }
+
+    // Animate skill bars
+    function animateSkillBars() {
+      const skillBars = document.querySelectorAll('.skill-fill');
+      skillBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = width;
+        }, 100);
+      });
+    }
+
+    // Load user preferences
+    function loadUserPreferences() {
+      // Load from localStorage or default values
+      const savedPrefs = localStorage.getItem('userPreferences');
+      if (savedPrefs) {
+        Object.assign(profileData.preferences, JSON.parse(savedPrefs));
+      }
+    }
+
+    // Start activity updates
+    function startActivityUpdates() {
+      // Simulate real-time activity updates
+      setInterval(updateRecentActivity, 30000); // Update every 30 seconds
+    }
+
+    // Update recent activity
+    function updateRecentActivity() {
+      // This would normally fetch from a server
+      // For demo purposes, we'll simulate new activity
+      const activities = [
+        'Document uploaded for analysis',
+        'Risk assessment completed',
+        'New achievement unlocked',
+        'Profile updated',
+        'Settings changed'
+      ];
+      
+      // Randomly show a new activity (1% chance per update)
+      if (Math.random() < 0.01) {
+        const activity = activities[Math.floor(Math.random() * activities.length)];
+        showNotification(`New activity: ${activity}`, 'info');
+      }
+    }
+
+    // Utility functions
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      // Style the notification
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease;
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+
+    // Security functions (stubs)
+    function changePassword() {
+      showNotification('Password change feature would open here', 'info');
+    }
+
+    function manage2FA() {
+      showNotification('2FA management feature would open here', 'info');
+    }
+
+    function revokeSession(sessionId) {
+      showNotification(`Session ${sessionId} revoked successfully`, 'success');
+    }
+
+    function revokeAllSessions() {
+      if (confirm('Are you sure you want to sign out all other sessions?')) {
+        showNotification('All other sessions have been signed out', 'success');
+      }
+    }
+
+    function exportData() {
+      showNotification('Data export initiated. You will receive an email when ready.', 'success');
+    }
+
+    function deactivateAccount() {
+      if (confirm('Are you sure you want to deactivate your account?')) {
+        showNotification('Account deactivation feature would proceed here', 'info');
+      }
+    }
+
+    function deleteAccount() {
+      if (confirm('This action cannot be undone. Are you sure you want to delete your account?')) {
+        showNotification('Account deletion feature would proceed here', 'info');
+      }
+    }
+
+    // Legacy form handling (keep for compatibility)
+    document.addEventListener('DOMContentLoaded', function() {
+      const personalForm = document.getElementById('personalForm');
+      if (personalForm) {
+        personalForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          savePersonalInfo();
+        });
+      }
+
+      const settingsForm = document.getElementById('settingsForm');
+      if (settingsForm) {
+        settingsForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          savePreferences();
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

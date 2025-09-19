@@ -6,26 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&      <p>Don't have an account? <a href="signup.html">Signup</a></p>
-    </div>
-  </div>
-
-  <!-- Success Popup -->
-  <div class="popup-overlay" id="popup-overlay">
-    <div class="success-popup">
-      <div class="legal-accent">
-        <i class="fas fa-balance-scale"></i>
-      </div>
-      <div class="success-icon">
-        <i class="fas fa-check"></i>
-      </div>
-      <h2 class="popup-title">Welcome Back!</h2>
-      <p class="popup-message">You have successfully logged into LegalEase. Ready to simplify your legal documents?</p>
-      <button class="popup-btn" onclick="goToHome()">
-        <i class="fas fa-home"></i>&nbsp;&nbsp;Go to Home
-      </button>
-    </div>
-  </div>y=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
 
@@ -223,6 +204,7 @@
       transition: all 0.3s ease;
       font-family: "Segoe UI", Arial, sans-serif;
       min-width: 150px;
+      flex: 1;
     }
 
     .popup-btn:hover {
@@ -307,6 +289,28 @@
     </div>
   </div>
 
+  <!-- Success Popup -->
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="success-popup">
+      <div class="legal-accent">
+        <i class="fas fa-balance-scale"></i>
+      </div>
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2 class="popup-title">Welcome Back!</h2>
+      <p class="popup-message">You have successfully logged into LegalEase. Ready to simplify your legal documents?</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button class="popup-btn" onclick="goToDashboard()">
+          <i class="fas fa-chart-line"></i>&nbsp;&nbsp;Go to Dashboard
+        </button>
+        <button class="popup-btn" onclick="goToHome()" style="background: linear-gradient(135deg, #333, #555);">
+          <i class="fas fa-home"></i>&nbsp;&nbsp;Go to Home
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <p>© 2025 LegalEase | Built with MERN</p>
   </footer>
@@ -324,6 +328,10 @@
 
     function goToHome() {
       window.location.href = 'index.html';
+    }
+
+    function goToDashboard() {
+      window.location.href = 'dashboard.html';
     }
 
     // Close popup when clicking outside

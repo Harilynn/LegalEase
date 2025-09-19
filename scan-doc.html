@@ -1,0 +1,1403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LegalEase | Advanced Document Scanner</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .navbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      font-family: "Playfair Display", serif;
+      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .logo::after {
+      content: '⚖️';
+      margin-left: 8px;
+      animation: scaleBalance 3s ease-in-out infinite;
+      display: inline-block;
+    }
+    .logo:hover {
+      color: #e0e0e0;
+      transform: scale(1.05);
+      text-shadow: 0 4px 16px rgba(255, 255, 255, 0.6);
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-links li a {
+      display: block;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-links li a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.6s ease;
+    }
+    .nav-links li a:hover::before {
+      left: 100%;
+    }
+    .nav-links li a:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #f0f0f0;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
+    }
+    .nav-links li a.active {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #f0f0f0;
+    }
+
+    @keyframes scaleBalance {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-5deg) scale(1.1); }
+      75% { transform: rotate(5deg) scale(1.1); }
+    }
+
+    main {
+      margin-top: 90px;
+      padding: 2rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      flex: 1;
+    }
+    
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    h1 {
+      color: #fff;
+      margin-bottom: 0.5rem;
+      font-family: "Playfair Display", serif;
+      font-size: 3rem;
+      background: linear-gradient(135deg, #fff, #e0e0e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      margin-bottom: 3rem;
+      color: #ccc;
+      font-style: italic;
+      font-size: 1.2rem;
+    }
+
+    /* User Profile Section */
+    .profile-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .section-title {
+      font-family: "Playfair Display", serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #ccc;
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    
+    .slider-container {
+      margin: 1rem 0;
+    }
+    
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      appearance: none;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 3rem;
+      margin-bottom: 2rem;
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      text-align: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .upload-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+      transform: rotate(45deg);
+      transition: all 0.6s ease;
+      opacity: 0;
+    }
+    
+    .upload-section:hover::before {
+      opacity: 1;
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    .upload-section:hover {
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.01);
+    }
+    
+    .upload-section.dragover {
+      border-color: #e0e0e0;
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .upload-icon {
+      font-size: 4rem;
+      color: #888;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .upload-section:hover .upload-icon {
+      color: #e0e0e0;
+      transform: scale(1.1);
+    }
+    
+    .upload-text {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #ccc;
+      font-weight: 500;
+    }
+    
+    .upload-hint {
+      color: #888;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    
+    .file-input {
+      display: none;
+    }
+    
+    .upload-btn {
+      background: linear-gradient(135deg, #333, #555);
+      color: white;
+      border: none;
+      padding: 1.2rem 2.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .upload-btn:hover {
+      background: linear-gradient(135deg, #555, #777);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* File Preview */
+    .file-preview {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .file-icon {
+      font-size: 3rem;
+      color: #e0e0e0;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 12px;
+    }
+    
+    .file-details h3 {
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+      font-size: 1.3rem;
+    }
+    
+    .file-details p {
+      margin: 0;
+      color: #ccc;
+      font-size: 1rem;
+    }
+    
+    .file-metadata {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    
+    .metadata-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .metadata-label {
+      font-size: 0.8rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .metadata-value {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #333, #555);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #555, #777);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    /* Analysis Section */
+    .analysis-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      display: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .analysis-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .analysis-title {
+      font-family: "Playfair Display", serif;
+      font-size: 1.8rem;
+      color: #fff;
+    }
+    
+    .progress-container {
+      margin: 2rem 0;
+    }
+    
+    .progress-bar {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      height: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      background: linear-gradient(90deg, #333, #e0e0e0);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: progressShine 2s infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .progress-text {
+      text-align: center;
+      margin-top: 1rem;
+      color: #ccc;
+      font-size: 1rem;
+    }
+    
+    .analysis-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .tab {
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .tab.active {
+      color: #fff;
+      border-bottom-color: #e0e0e0;
+    }
+    
+    .tab:hover {
+      color: #ccc;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .results {
+      margin-top: 2rem;
+    }
+    
+    .result-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #555;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .result-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(5px);
+    }
+    
+    .result-item.risk-high {
+      border-left-color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+    }
+    
+    .result-item.risk-medium {
+      border-left-color: #ffa726;
+      background: rgba(255, 167, 38, 0.1);
+    }
+    
+    .result-item.risk-low {
+      border-left-color: #66bb6a;
+      background: rgba(102, 187, 106, 0.1);
+    }
+    
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .result-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    
+    .result-score {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    
+    .result-content {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .result-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .action-link {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    
+    .action-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Comparison Section */
+    .comparison-section {
+      margin-top: 2rem;
+    }
+    
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    .comparison-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .panel-title {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .needs-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .needs-item {
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .needs-status {
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .status-met {
+      background: rgba(102, 187, 106, 0.2);
+      color: #66bb6a;
+    }
+    
+    .status-partial {
+      background: rgba(255, 167, 38, 0.2);
+      color: #ffa726;
+    }
+    
+    .status-missing {
+      background: rgba(255, 107, 107, 0.2);
+      color: #ff6b6b;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 2rem;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      main { padding: 1rem; }
+      .upload-section { padding: 2rem 1rem; }
+      .action-buttons { flex-direction: column; }
+      .profile-grid { grid-template-columns: 1fr; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .analysis-tabs { flex-wrap: wrap; }
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="logo">LegalEase</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="review-docs.html">Review Docs</a></li>
+        <li><a href="scan-doc.html" class="active">Scan Doc</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="chatbot.html">Chat</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <div class="page-header">
+      <h1>Advanced Document Scanner</h1>
+      <div class="subtitle">Upload, analyze, and compare legal documents with AI-powered insights</div>
+    </div>
+
+    <!-- User Profile Section -->
+    <div class="profile-section">
+      <h2 class="section-title">
+        <i class="fas fa-user-circle"></i>
+        Your Profile & Needs
+      </h2>
+      
+      <div class="profile-grid">
+        <div>
+          <div class="form-group">
+            <label for="financial-profile">Financial Profile</label>
+            <select id="financial-profile">
+              <option value="">Select your financial situation</option>
+              <option value="student">Student / Low Income</option>
+              <option value="middle">Middle Income Professional</option>
+              <option value="high">High Income / Business Owner</option>
+              <option value="retirement">Retirement / Fixed Income</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="document-type">Expected Document Type</label>
+            <select id="document-type">
+              <option value="">What type of document are you reviewing?</option>
+              <option value="rental">Rental Agreement / Lease</option>
+              <option value="loan">Loan Agreement</option>
+              <option value="employment">Employment Contract</option>
+              <option value="service">Service Agreement</option>
+              <option value="purchase">Purchase Agreement</option>
+              <option value="nda">Non-Disclosure Agreement</option>
+              <option value="terms">Terms of Service</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="budget">Monthly Budget for This Agreement</label>
+            <input type="number" id="budget" placeholder="Enter amount in USD">
+          </div>
+          
+          <div class="form-group">
+            <label for="priorities">Your Priorities (Top 3)</label>
+            <textarea id="priorities" rows="3" placeholder="Example: Flexible payment terms, early termination rights, liability protection..."></textarea>
+          </div>
+        </div>
+        
+        <div>
+          <div class="form-group">
+            <label for="risk-tolerance">Risk Tolerance</label>
+            <div class="slider-container">
+              <input type="range" id="risk-tolerance" class="slider" min="1" max="10" value="5">
+              <div class="slider-labels">
+                <span>Conservative</span>
+                <span>Moderate</span>
+                <span>Aggressive</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="deal-breakers">Deal Breakers</label>
+            <textarea id="deal-breakers" rows="3" placeholder="What terms would make you walk away from this agreement?"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="negotiation-power">Negotiation Power</label>
+            <div class="slider-container">
+              <input type="range" id="negotiation-power" class="slider" min="1" max="10" value="5">
+              <div class="slider-labels">
+                <span>Limited</span>
+                <span>Moderate</span>
+                <span>Strong</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="timeline">Timeline Urgency</label>
+            <select id="timeline">
+              <option value="flexible">Flexible - Can take time to negotiate</option>
+              <option value="moderate">Moderate - Some time pressure</option>
+              <option value="urgent">Urgent - Need to sign soon</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section" id="uploadSection">
+      <div class="upload-icon">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+      <div class="upload-text">Drag and drop your legal document here</div>
+      <div class="upload-hint">
+        Supported formats: PDF, DOC, DOCX, TXT (Max 10MB)<br>
+        We support contracts, agreements, terms of service, and more
+      </div>
+      <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+        <i class="fas fa-folder-open"></i>
+        Choose Document
+      </button>
+      <input type="file" id="fileInput" class="file-input" accept=".pdf,.doc,.docx,.txt" />
+    </div>
+
+    <!-- File Preview -->
+    <div class="file-preview" id="filePreview">
+      <div class="file-info">
+        <div class="file-icon">
+          <i class="fas fa-file-contract"></i>
+        </div>
+        <div class="file-details">
+          <h3 id="fileName">Employment_Agreement.pdf</h3>
+          <p id="fileSize">2.4 MB • Uploaded just now</p>
+        </div>
+      </div>
+      
+      <div class="file-metadata">
+        <div class="metadata-item">
+          <div class="metadata-label">Pages</div>
+          <div class="metadata-value" id="pageCount">12</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">Word Count</div>
+          <div class="metadata-value" id="wordCount">~3,250</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">Reading Time</div>
+          <div class="metadata-value" id="readingTime">13 min</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">Complexity</div>
+          <div class="metadata-value" id="complexity">High</div>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="startAnalysis()">
+          <i class="fas fa-brain"></i>
+          Start AI Analysis
+        </button>
+        <button class="btn btn-secondary" onclick="previewDocument()">
+          <i class="fas fa-eye"></i>
+          Preview Document
+        </button>
+        <button class="btn btn-secondary" onclick="clearFile()">
+          <i class="fas fa-trash"></i>
+          Remove File
+        </button>
+      </div>
+    </div>
+
+    <!-- Analysis Section -->
+    <div class="analysis-section" id="analysisSection">
+      <div class="analysis-header">
+        <i class="fas fa-cogs" style="font-size: 2rem; color: #e0e0e0;"></i>
+        <div>
+          <h2 class="analysis-title">AI Analysis in Progress</h2>
+          <p style="color: #ccc; margin: 0;">Analyzing document against your profile and needs...</p>
+        </div>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Initializing analysis...</div>
+      </div>
+      
+      <div class="analysis-tabs">
+        <button class="tab active" onclick="showTab('overview')">Overview</button>
+        <button class="tab" onclick="showTab('risks')">Risk Analysis</button>
+        <button class="tab" onclick="showTab('comparison')">Needs vs. Document</button>
+        <button class="tab" onclick="showTab('negotiation')">Negotiation Tips</button>
+        <button class="tab" onclick="showTab('clauses')">Key Clauses</button>
+      </div>
+      
+      <div id="overview" class="tab-content active">
+        <div class="results" id="overviewResults">
+          <!-- Overview results will be populated here -->
+        </div>
+      </div>
+      
+      <div id="risks" class="tab-content">
+        <div class="results" id="riskResults">
+          <!-- Risk analysis results will be populated here -->
+        </div>
+      </div>
+      
+      <div id="comparison" class="tab-content">
+        <div class="comparison-section">
+          <div class="comparison-grid">
+            <div class="comparison-panel">
+              <h3 class="panel-title">
+                <i class="fas fa-check-circle" style="color: #66bb6a;"></i>
+                Your Needs Met
+              </h3>
+              <ul class="needs-list" id="needsMet">
+                <!-- Populated by JavaScript -->
+              </ul>
+            </div>
+            <div class="comparison-panel">
+              <h3 class="panel-title">
+                <i class="fas fa-exclamation-triangle" style="color: #ffa726;"></i>
+                Gaps & Concerns
+              </h3>
+              <ul class="needs-list" id="needsGaps">
+                <!-- Populated by JavaScript -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="negotiation" class="tab-content">
+        <div class="results" id="negotiationResults">
+          <!-- Negotiation tips will be populated here -->
+        </div>
+      </div>
+      
+      <div id="clauses" class="tab-content">
+        <div class="results" id="clauseResults">
+          <!-- Key clauses analysis will be populated here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LegalEase | Advanced Document Analysis with AI</p>
+  </footer>
+
+  <script>
+    // File upload handling
+    const fileInput = document.getElementById('fileInput');
+    const uploadSection = document.getElementById('uploadSection');
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    let currentFile = null;
+
+    // Drag and drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      uploadSection.addEventListener(eventName, preventDefaults, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadSection.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadSection.addEventListener(eventName, unhighlight, false);
+    });
+
+    uploadSection.addEventListener('drop', handleDrop, false);
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    function highlight() {
+      uploadSection.classList.add('dragover');
+    }
+
+    function unhighlight() {
+      uploadSection.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles(files);
+    }
+
+    fileInput.addEventListener('change', function(e) {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      if (files.length > 0) {
+        const file = files[0];
+        currentFile = file;
+        
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        
+        uploadSection.style.display = 'none';
+        filePreview.style.display = 'block';
+      }
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function clearFile() {
+      currentFile = null;
+      fileInput.value = '';
+      uploadSection.style.display = 'block';
+      filePreview.style.display = 'none';
+      document.getElementById('analysisSection').style.display = 'none';
+    }
+
+    // Analysis simulation
+    function analyzeDocument() {
+      const analysisSection = document.getElementById('analysisSection');
+      const progressFill = document.getElementById('progressFill');
+      const analysisStatus = document.getElementById('analysisStatus');
+      const results = document.getElementById('results');
+      
+      analysisSection.style.display = 'block';
+      results.innerHTML = '';
+      
+      // Simulate analysis progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 100) progress = 100;
+        
+        progressFill.style.width = progress + '%';
+        
+        if (progress < 30) {
+          analysisStatus.textContent = 'Reading document structure...';
+        } else if (progress < 60) {
+          analysisStatus.textContent = 'Analyzing legal clauses...';
+        } else if (progress < 90) {
+          analysisStatus.textContent = 'Identifying potential risks...';
+        } else {
+          analysisStatus.textContent = 'Generating summary...';
+        }
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          showResults();
+        }
+      }, 200);
+    }
+
+    function showResults() {
+      const analysisStatus = document.getElementById('analysisStatus');
+      const results = document.getElementById('results');
+      
+      analysisStatus.textContent = 'Analysis complete!';
+      
+      const sampleResults = [
+        {
+          type: 'risk-high',
+          title: 'High Risk: Unlimited Liability Clause',
+          content: 'Section 3.2 contains an unlimited liability clause that could expose you to significant financial risk.'
+        },
+        {
+          type: 'risk-medium',
+          title: 'Medium Risk: Unclear Termination Terms',
+          content: 'The contract termination process in Section 7.1 lacks specific timelines and procedures.'
+        },
+        {
+          type: 'risk-low',
+          title: 'Low Risk: Standard Confidentiality',
+          content: 'Confidentiality terms appear standard and adequately protect both parties.'
+        }
+      ];
+      
+      results.innerHTML = sampleResults.map(result => `
+        <div class="result-item ${result.type}">
+          <h4>${result.title}</h4>
+          <p>${result.content}</p>
+        </div>
+      `).join('');
+    }
+
+    // Additional comprehensive functionality
+    let currentTab = 'overview';
+    let analysisData = {};
+
+    // Initialize page functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if file was uploaded recently
+      const recentFile = localStorage.getItem('recentUpload');
+      if (recentFile) {
+        const fileData = JSON.parse(recentFile);
+        showFilePreview(fileData);
+      }
+
+      // Setup drag and drop
+      setupDragAndDrop();
+      
+      // Setup file input change
+      document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+    });
+
+    // Setup drag and drop functionality
+    function setupDragAndDrop() {
+      const uploadSection = document.getElementById('uploadSection');
+      
+      uploadSection.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadSection.classList.add('drag-over');
+      });
+      
+      uploadSection.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadSection.classList.remove('drag-over');
+      });
+      
+      uploadSection.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadSection.classList.remove('drag-over');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+    }
+
+    // Handle file selection
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        handleFile(file);
+      }
+    }
+
+    // Handle file processing
+    function handleFile(file) {
+      // Validate file
+      if (!validateFile(file)) {
+        return;
+      }
+
+      uploadedFile = file;
+      
+      // Generate file metadata
+      const fileData = {
+        name: file.name,
+        size: formatFileSize(file.size),
+        type: file.type,
+        lastModified: new Date(file.lastModified).toLocaleString(),
+        pages: Math.floor(Math.random() * 20) + 5, // Simulated
+        wordCount: Math.floor(Math.random() * 5000) + 1000, // Simulated
+        readingTime: Math.floor(Math.random() * 20) + 5, // Simulated
+        complexity: getComplexityLevel(file.size)
+      };
+
+      showFilePreview(fileData);
+      
+      // Store for persistence
+      localStorage.setItem('recentUpload', JSON.stringify(fileData));
+    }
+
+    // Validate uploaded file
+    function validateFile(file) {
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain'
+      ];
+
+      if (file.size > maxSize) {
+        showError('File size must be less than 10MB');
+        return false;
+      }
+
+      if (!allowedTypes.includes(file.type) && !file.name.toLowerCase().match(/\.(pdf|doc|docx|txt)$/)) {
+        showError('Please upload a PDF, DOC, DOCX, or TXT file');
+        return false;
+      }
+
+      return true;
+    }
+
+    function getComplexityLevel(fileSize) {
+      if (fileSize < 1024 * 1024) return 'Low';
+      if (fileSize < 5 * 1024 * 1024) return 'Medium';
+      return 'High';
+    }
+
+    function showError(message) {
+      // Create error notification
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-notification';
+      errorDiv.textContent = message;
+      errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #f44336;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      `;
+      
+      document.body.appendChild(errorDiv);
+      
+      setTimeout(() => {
+        errorDiv.remove();
+      }, 5000);
+    }
+
+    // Start AI analysis
+    function startAnalysis() {
+      // Hide file preview
+      document.getElementById('filePreview').style.display = 'none';
+      
+      // Show analysis section
+      const analysisSection = document.getElementById('analysisSection');
+      analysisSection.style.display = 'block';
+      
+      // Start progress animation
+      simulateAdvancedAnalysis();
+    }
+
+    // Simulate analysis progress
+    function simulateAdvancedAnalysis() {
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      let progress = 0;
+      
+      const steps = [
+        'Initializing analysis...',
+        'Reading document content...',
+        'Extracting key terms and clauses...',
+        'Analyzing risk factors...',
+        'Comparing against your profile...',
+        'Generating recommendations...',
+        'Preparing negotiation strategies...',
+        'Finalizing analysis...'
+      ];
+      
+      const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 100) progress = 100;
+        
+        progressFill.style.width = progress + '%';
+        
+        const stepIndex = Math.floor((progress / 100) * steps.length);
+        if (stepIndex < steps.length) {
+          progressText.textContent = steps[stepIndex];
+        }
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            completeAdvancedAnalysis();
+          }, 1000);
+        }
+      }, 300);
+    }
+
+    // Complete analysis and show results
+    function completeAdvancedAnalysis() {
+      // Generate mock analysis data
+      analysisData = {
+        overall_score: 7.2,
+        risk_level: 'Medium',
+        recommendation: 'Proceed with caution - negotiate key terms',
+        key_issues: [
+          'Limited termination rights',
+          'High penalty clauses',
+          'Broad liability exposure',
+          'Unclear payment terms'
+        ],
+        positive_aspects: [
+          'Reasonable compensation',
+          'Standard work hours',
+          'Good benefits package',
+          'Clear job responsibilities'
+        ]
+      };
+      
+      // Hide progress and show results
+      document.querySelector('.analysis-header').style.display = 'none';
+      document.querySelector('.progress-container').style.display = 'none';
+      document.querySelector('.analysis-tabs').style.display = 'flex';
+      document.querySelector('.tab-content.active').style.display = 'block';
+      
+      // Populate results
+      populateAdvancedResults();
+    }
+
+    // Tab switching functionality
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      document.getElementById(tabName).classList.add('active');
+      
+      // Add active class to clicked tab
+      event.target.classList.add('active');
+      
+      currentTab = tabName;
+    }
+
+    function populateAdvancedResults() {
+      // Populate overview
+      const overviewResults = document.getElementById('overviewResults');
+      if (overviewResults) {
+        overviewResults.innerHTML = `
+          <div class="score-card">
+            <div class="score-circle">
+              <div class="score-number">${analysisData.overall_score}</div>
+              <div class="score-label">Overall Score</div>
+            </div>
+            <div class="score-details">
+              <div class="score-item">
+                <span class="score-metric">Risk Level</span>
+                <span class="score-value risk-${analysisData.risk_level.toLowerCase()}">${analysisData.risk_level}</span>
+              </div>
+              <div class="score-item">
+                <span class="score-metric">Recommendation</span>
+                <span class="score-value">${analysisData.recommendation}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Preview document function
+    function previewDocument() {
+      showError('Document preview feature coming soon!');
+    }
+
+    // Clear file function
+    function clearFile() {
+      document.getElementById('filePreview').style.display = 'none';
+      document.getElementById('analysisSection').style.display = 'none';
+      document.getElementById('uploadSection').style.display = 'block';
+      document.getElementById('fileInput').value = '';
+      uploadedFile = null;
+      localStorage.removeItem('recentUpload');
+    }
+  </script>
+
+</body>
+</html>
