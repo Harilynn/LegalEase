@@ -36,9 +36,7 @@
       gap: 5px;
     }
     .back-btn i { font-size: 1rem; }
-    .back-btn span {
-      cursor: pointer; /* only text is clickable */
-    }
+    .back-btn span { cursor: pointer; }
 
     .container {
       flex: 1;
@@ -64,7 +62,6 @@
     }
     h2 { margin-bottom: 2rem; }
 
-    /* Input Groups with Icons */
     .input-group {
       position: relative;
       margin-bottom: 1.5rem;
@@ -132,6 +129,133 @@
       font-size: 0.9rem;
       color: #aaa;
     }
+
+    /* Success Popup */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .success-popup {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      transform: scale(0.7);
+      animation: popIn 0.4s ease forwards;
+      position: relative;
+      border: 3px solid #d4a017;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2a9d8f, #21b896);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: pulse 2s infinite;
+    }
+
+    .success-icon i {
+      color: white;
+      font-size: 2.5rem;
+      animation: checkmark 0.6s ease 0.3s both;
+    }
+
+    .popup-title {
+      font-family: "Playfair Display", serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 0.5rem;
+    }
+
+    .popup-message {
+      color: #555;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .popup-btn {
+      background: linear-gradient(135deg, #000, #333);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "Segoe UI", Arial, sans-serif;
+      min-width: 150px;
+    }
+
+    .popup-btn:hover {
+      background: linear-gradient(135deg, #333, #555);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .legal-accent {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 40px;
+      height: 40px;
+      background: #d4a017;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotate 3s linear infinite;
+    }
+
+    .legal-accent i {
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+      50% { transform: scale(1.05) rotate(2deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes checkmark {
+      0% { transform: scale(0) rotate(45deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -146,7 +270,7 @@
     <div class="auth-box">
       <h1>Welcome to LegalEase</h1>
       <h2>Signup</h2>
-      <form>
+      <form id="signup-form">
         <div class="input-group">
           <i class="fas fa-user input-icon"></i>
           <input type="text" id="signup-name" placeholder=" " required>
@@ -178,9 +302,49 @@
     </div>
   </div>
 
+  <!-- Success Popup -->
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="success-popup">
+      <div class="legal-accent">
+        <i class="fas fa-balance-scale"></i>
+      </div>
+      <div class="success-icon">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <h2 class="popup-title">Account Created!</h2>
+      <p class="popup-message">Welcome to LegalEase! Your account has been successfully created. You can now login to start simplifying your legal documents.</p>
+      <button class="popup-btn" onclick="goToLogin()">
+        <i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Go to Login
+      </button>
+    </div>
+  </div>
+
   <footer>
     <p>© 2025 LegalEase | Built with MERN</p>
   </footer>
+
+  <script>
+    const form = document.getElementById('signup-form');
+    const popupOverlay = document.getElementById('popup-overlay');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // prevent actual form submit
+      
+      // Show the beautiful popup
+      popupOverlay.style.display = 'flex';
+    });
+
+    function goToLogin() {
+      window.location.href = 'login.html';
+    }
+
+    // Close popup when clicking outside
+    popupOverlay.addEventListener('click', function(e) {
+      if (e.target === popupOverlay) {
+        popupOverlay.style.display = 'none';
+      }
+    });
+  </script>
 
 </body>
 </html>
