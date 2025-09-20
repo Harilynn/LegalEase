@@ -36,7 +36,7 @@ new Chart(ctx2, {
   }
 });
 
-// === Chatbot Elements ===
+// === Chatbot ===
 const bubble = document.getElementById("chatbot-bubble");
 const chatWindow = document.getElementById("chatbot-window");
 const closeBtn = document.getElementById("close-chat");
@@ -45,7 +45,7 @@ const messages = document.getElementById("chatbot-messages");
 const input = document.getElementById("chatbot-input");
 const sendBtn = document.getElementById("chatbot-send");
 
-// Toggle chat window
+// Toggle
 bubble.addEventListener("click", () => { chatWindow.style.display = "flex"; bubble.style.display = "none"; });
 closeBtn.addEventListener("click", () => { chatWindow.style.display = "none"; bubble.style.display = "flex"; });
 expandBtn.addEventListener("click", () => { window.location.href = "chatbot.html"; });
@@ -53,52 +53,38 @@ expandBtn.addEventListener("click", () => { window.location.href = "chatbot.html
 // Append message
 function appendMessage(text, sender = "bot") {
   const div = document.createElement("div");
-  div.style.margin = "6px 0";
-  div.style.padding = "8px 12px";
-  div.style.borderRadius = "12px";
-  div.style.maxWidth = "75%";
-  div.style.fontSize = "0.85rem";
-  div.style.wordWrap = "break-word";
-  div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
-  div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
+  div.className = sender === "user" ? "bubble user" : "bubble bot";
   div.innerText = text;
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
 
-// === Ask Gemini via Serverless Function ===
-async function askGemini(prompt) {
+// Send to backend
+async function askBot(prompt) {
   appendMessage(prompt, "user");
-  appendMessage("...", "bot"); // typing indicator
-
+  appendMessage("...", "bot");
   try {
-    const res = await fetch("/api/chat", {  // ✅ use /api/chat
+    const res = await fetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
     });
-
-
-    const payload = await res.json();
-    messages.lastChild.remove(); // remove typing indicator
-
-    if (payload?.reply) appendMessage(payload.reply, "bot");
-    else appendMessage("⚠️ No reply from server", "bot");
+    const data = await res.json();
+    messages.lastChild.remove(); // remove "..."
+    appendMessage(data.reply, "bot");
   } catch (err) {
     messages.lastChild.remove();
     appendMessage("⚠️ Error: " + err.message, "bot");
   }
 }
 
-// Send button
+// Events
 sendBtn.addEventListener("click", () => {
   const text = input.value.trim();
   if (!text) return;
   input.value = "";
-  askGemini(text);
+  askBot(text);
 });
-
-// Enter key support
 input.addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
@@ -106,6 +92,5 @@ input.addEventListener("keydown", e => {
   }
 });
 
-// Initial greeting
+// Greeting
 appendMessage("👋 Hi! I’m LegalEase Bot. How can I help?");
-
