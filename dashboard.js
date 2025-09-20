@@ -50,7 +50,7 @@ bubble.addEventListener("click", () => { chatWindow.style.display = "flex"; bubb
 closeBtn.addEventListener("click", () => { chatWindow.style.display = "none"; bubble.style.display = "flex"; });
 expandBtn.addEventListener("click", () => { window.location.href = "chatbot.html"; });
 
-// Append message
+// Append message to chat
 function appendMessage(text, sender = "bot") {
   const div = document.createElement("div");
   div.style.margin = "6px 0";
@@ -66,13 +66,13 @@ function appendMessage(text, sender = "bot") {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// === Ask Gemini via Serverless Function ===
+// === Ask Gemini 2.5-Flash via serverless function ===
 async function askGemini(prompt) {
   appendMessage(prompt, "user");
   appendMessage("...", "bot"); // typing indicator
 
   try {
-    const res = await fetch("/chat", {  // ✅ correct route
+    const res = await fetch("/api/chat", {  // ✅ serverless route
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
@@ -83,6 +83,7 @@ async function askGemini(prompt) {
 
     if (payload?.reply) appendMessage(payload.reply, "bot");
     else appendMessage("⚠ No reply from server", "bot");
+
   } catch (err) {
     messages.lastChild.remove();
     appendMessage("⚠ Error: " + err.message, "bot");
