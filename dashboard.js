@@ -62,14 +62,13 @@ function appendMessage(text, sender = "bot") {
   div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
   div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
   
-  // Process markdown formatting for bot messages, plain text for user messages
+  // Simple fix for asterisks - just remove them for cleaner display
   if (sender === "bot") {
-    // Simple markdown processing for dashboard chatbot
-    let processedText = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold** -> <strong>
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') // *italic* -> <em>
-      .replace(/\n/g, '<br>'); // newlines -> <br>
-    div.innerHTML = processedText;
+    // Remove markdown asterisks for cleaner display
+    let cleanText = text
+      .replace(/\*\*(.*?)\*\*/g, '$1') // **bold** -> bold (remove asterisks)
+      .replace(/\*(.*?)\*/g, '$1'); // *italic* -> italic (remove asterisks)
+    div.innerText = cleanText;
   } else {
     div.innerText = text;
   }
