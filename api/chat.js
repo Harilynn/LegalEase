@@ -1,40 +1,31 @@
 // api/chat.js
-import express from "express";
-import fetch from "node-fetch"; // use native fetch if Node >=18
-import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+import { json } from "micro"; // or you can use Next.js API route if in Next.js
+import fetch from "node-fetch"; // optional on Node 18+
 import dotenv from "dotenv";
 
-// Load environment variables from .env
+// Load env variables locally (ignored in Vercel)
 dotenv.config();
 
-// Fix __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-const app = express();
-const port = 3000;
+  let body;
+  try {
+    body = await json(req);
+  } catch {
+    return res.status(400).json({ error: "Invalid JSON" });
+  }
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Serve frontend files (dashboard.html, dashboard.js, dashboard.css)
-app.use(express.static(path.join(__dirname, "../")));
-
-// Default route → dashboard.html
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dashboard.html"));
-});
-
-// Chat API endpoint
-app.post("/chat", async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt } = body;
   if (!prompt) return res.status(400).json({ error: "Missing prompt" });
 
   const API_KEY = process.env.GEMINI_API_KEY;
-  if (!API_KEY) return res.status(500).json({ error: "API key not configured" });
+  if (!API_KEY) {
+    console.error("GEMINI_API_KEY not set in environment!");
+    return res.status(500).json({ error: "API key not configured" });
+  }
 
   try {
     const googleResp = await fetch(
@@ -57,9 +48,4 @@ app.post("/chat", async (req, res) => {
     console.error("Upstream error:", err);
     return res.status(500).json({ error: "Upstream API error" });
   }
-});
-
-// Start server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+}
