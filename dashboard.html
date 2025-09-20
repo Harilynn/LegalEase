@@ -14,14 +14,6 @@
   <!-- Marked.js -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="dashboard.css">
-  <!-- Google AI SDK -->
-  <script type="importmap">
-  {
-    "imports": {
-      "@google/generative-ai": "https://esm.run/@google/generative-ai"
-    }
-  }
-  </script>
 
 </head>
 <body>
@@ -179,7 +171,6 @@
 
   <!-- Load JS last -->
   <script type="module">
-  import { GoogleGenerativeAI } from "@google/generative-ai";
 
   // === DOM Elements ===
   const bubble = document.getElementById("chatBubble");
@@ -265,4 +256,5 @@
 
 </body>
 </html>
+
 
