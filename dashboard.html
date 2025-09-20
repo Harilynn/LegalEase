@@ -190,11 +190,6 @@
   const input = document.getElementById("chatInput");
   const sendBtn = document.getElementById("sendChat");
 
-  // === Gemini Setup ===
-  const GEMINI_API_KEY = "AIzaSyB84EyDJKwPvOAl1eJnGOJJn8LXLLKa7-4"; // Replace with your actual API key
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
   // === Event Listeners ===
   // Hover effects
   bubble.addEventListener("mouseenter", () => {
@@ -270,3 +265,4 @@
 
 </body>
 </html>
+
