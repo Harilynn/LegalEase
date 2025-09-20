@@ -13,255 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Marked.js -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #fafafa;
-      color: #111;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Navbar */
-    .navbar {
-      background: rgba(0,0,0,0.95);
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .navbar-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: white;
-      font-family: "Playfair Display", serif;
-      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
-      transition: all 0.3s ease;
-      position: relative;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .logo::after {
-      content: '⚖️';
-      margin-left: 8px;
-      animation: scaleBalance 3s ease-in-out infinite;
-      display: inline-block;
-    }
-    .logo:hover {
-      color: #e0e0e0;
-      transform: scale(1.05);
-      text-shadow: 0 4px 16px rgba(255, 255, 255, 0.6);
-    }
-    .nav-links {
-      display: flex;
-      gap: 0.5rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .nav-links li {
-      position: relative;
-      overflow: hidden;
-    }
-    .nav-links li a {
-      display: block;
-      padding: 0.8rem 1.2rem;
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    .nav-links li a::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      transition: left 0.6s ease;
-    }
-    .nav-links li a:hover::before {
-      left: 100%;
-    }
-    .nav-links li a:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.4);
-      color: #f0f0f0;
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
-    }
-    .nav-links li a.active {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.6);
-      color: #f0f0f0;
-    }
-
-    @keyframes scaleBalance {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(-5deg) scale(1.1); }
-      75% { transform: rotate(5deg) scale(1.1); }
-    }
-    main {
-      margin-top: 90px;
-      padding: 2rem;
-      max-width: 1400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    h1 {
-      color: #111;
-      margin-bottom: 0.3rem;
-      font-family: "Playfair Display", serif;
-    }
-    .subtitle {
-      margin-bottom: 2.5rem;
-      color: #666;
-      font-style: italic;
-    }
-
-    /* Stats cards */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 4px solid #2a9d8f;
-      transition: transform 0.2s ease;
-    }
-    .card:hover { transform: translateY(-2px); }
-    .card h3 {
-      margin: 0 0 0.7rem 0;
-      color: #333;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .card .value {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #2a9d8f;
-      margin-bottom: 0.3rem;
-    }
-    .card .value.red { color: #e63946; }
-    .card .desc {
-      font-size: 0.85rem;
-      color: #666;
-    }
-
-    /* Two-column charts */
-    .charts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-    .panel {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .panel h3 {
-      margin: 0 0 1rem 0;
-      color: #333;
-      font-size: 1.1rem;
-    }
-
-    /* Activity Feed */
-    .recent-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid #eee;
-    }
-    .recent-item:last-child { border-bottom: none; }
-    .recent-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #e1f5fe;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #2a9d8f;
-      font-size: 0.9rem;
-    }
-    .recent-text {
-      flex: 1;
-      font-size: 0.9rem;
-      color: #333;
-    }
-    .recent-time {
-      font-size: 0.8rem;
-      color: #999;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-      .charts {
-        grid-template-columns: 1fr;
-      }
-      main { padding: 1rem; }
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 2rem;
-      background: #111;
-      color: #fff;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    /* Chart container sizing */
-    .chart-container {
-      position: relative;
-      width: 100%;
-      height: 300px;
-    }
-  </style>
-
-  <!-- Google AI SDK -->
-  <script type="importmap">
-  {
-    "imports": {
-      "@google/generative-ai": "https://esm.run/@google/generative-ai"
-    }
-  }
-  </script>
-
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
@@ -310,14 +62,12 @@
 
     <!-- Charts Row -->
     <div class="charts">
-      <!-- Left: Graph -->
       <div class="panel">
         <h3>Risk Analysis Overview</h3>
         <div class="chart-container">
           <canvas id="riskChart"></canvas>
         </div>
       </div>
-      <!-- Right: Activity -->
       <div class="panel">
         <h3>Document Upload Trends</h3>
         <div class="chart-container">
@@ -364,17 +114,17 @@
   </main>
 
   <!-- Chat Bubble -->
-  <div id="chatBubble"
+  <div id="chatbot-bubble"
        style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
               background: linear-gradient(135deg, #2a9d8f, #52bab3); border-radius: 50%;
               display: flex; align-items: center; justify-content: center; color: white;
               cursor: pointer; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.4);
-              transition: transform 0.2s ease, box-shadow 0.2s ease; z-index: 1000;">
+              z-index: 1000;">
     <i class="fas fa-comments" style="font-size: 1.4rem;"></i>
   </div>
 
   <!-- Chat Window -->
-  <div id="chatWindow"
+  <div id="chatbot-window"
        style="position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px;
               background: white; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
               display: none; flex-direction: column; z-index: 1001; border: 1px solid #ddd;">
@@ -383,16 +133,16 @@
                 color: white; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center;">
       <span style="font-weight: bold; font-size: 0.95rem;">💼 LegalEase Assistant</span>
       <div style="display: flex; gap: 8px;">
-        <button id="expandChat" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;" title="Expand">
+        <button id="expand-btn" style="background: none; border: none; color: white; cursor: pointer;" title="Expand">
           <i class="fas fa-expand"></i>
         </button>
-        <button id="closeChat" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;" title="Close">
+        <button id="close-chat" style="background: none; border: none; color: white; cursor: pointer;" title="Close">
           <i class="fas fa-times"></i>
         </button>
       </div>
     </div>
     <!-- Messages -->
-    <div id="chatMessages"
+    <div id="chatbot-messages"
          style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #fafafa;">
       <div style="align-self: flex-start; background: #e1f5fe; padding: 8px 12px; border-radius: 12px; max-width: 75%; font-size: 0.85rem;">
         👋 Hi! I'm your LegalEase assistant. How can I help you with your documents today?
@@ -400,12 +150,12 @@
     </div>
     <!-- Input -->
     <div style="display:flex; gap:8px; padding:10px; border-top:1px solid #ddd; background:#fafafa;">
-      <input id="chatInput" type="text" placeholder="Ask about your documents..."
+      <input id="chatbot-input" type="text" placeholder="Ask about your documents..."
              style="flex:1; border:1px solid #ccc; border-radius:20px; padding:8px 12px; font-size:0.85rem; outline:none;">
-      <button id="sendChat"
+      <button id="chatbot-send"
               style="background: linear-gradient(135deg, #2a9d8f, #52bab3); color: white; border: none;
                      border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex;
-                     align-items: center; justify-content: center; transition: transform 0.2s ease;">
+                     align-items: center; justify-content: center;">
         <i class="fas fa-paper-plane"></i>
       </button>
     </div>
@@ -416,96 +166,8 @@
     <p>© 2025 LegalEase | Built with MERN</p>
   </footer>
 
-  <!-- Load JS last -->
-  <script type="module">
-  import { GoogleGenerativeAI } from "@google/generative-ai";
-
-  // === DOM Elements ===
-  const bubble = document.getElementById("chatBubble");
-  const chatWindow = document.getElementById("chatWindow");
-  const closeBtn = document.getElementById("closeChat");
-  const expandBtn = document.getElementById("expandChat");
-  const messages = document.getElementById("chatMessages");
-  const input = document.getElementById("chatInput");
-  const sendBtn = document.getElementById("sendChat");
-
-  // === Gemini Setup ===
-  const GEMINI_API_KEY = "AIzaSyB84EyDJKwPvOAl1eJnGOJJn8LXLLKa7-4"; // Replace with your actual API key
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  // === Event Listeners ===
-  // Hover effects
-  bubble.addEventListener("mouseenter", () => {
-    bubble.style.transform = "scale(1.1)";
-    bubble.style.boxShadow = "0 6px 20px rgba(42, 157, 143, 0.6)";
-  });
-  bubble.addEventListener("mouseleave", () => {
-    bubble.style.transform = "scale(1)";
-    bubble.style.boxShadow = "0 4px 12px rgba(42, 157, 143, 0.4)";
-  });
-
-  // Toggle chat window
-  bubble.addEventListener("click", () => {
-    chatWindow.style.display = "flex";
-    bubble.style.display = "none";
-  });
-  closeBtn.addEventListener("click", () => {
-    chatWindow.style.display = "none";
-    bubble.style.display = "flex";
-  });
-  expandBtn.addEventListener("click", () => {
-    window.location.href = "chatbot.html";
-  });
-
-  // Append message
-  function appendMessage(text, sender = "bot") {
-    const div = document.createElement("div");
-    div.style.margin = "6px 0";
-    div.style.padding = "8px 12px";
-    div.style.borderRadius = "12px";
-    div.style.maxWidth = "75%";
-    div.style.fontSize = "0.85rem";
-    div.style.wordWrap = "break-word";
-    div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
-    div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
-    div.innerText = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  // Send to Gemini
-  async function askGemini(prompt) {
-    appendMessage(prompt, "user");
-    appendMessage("...", "bot"); // typing indicator
-
-    try {
-      const result = await model.generateContent(prompt);
-      const reply = result.response.text();
-      messages.lastChild.remove(); // remove typing indicator
-      appendMessage(reply, "bot");
-    } catch (err) {
-      messages.lastChild.remove();
-      appendMessage("⚠️ Error: " + err.message, "bot");
-    }
-  }
-
-  sendBtn.addEventListener("click", () => {
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = "";
-    askGemini(text);
-  });
-
-  input.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      sendBtn.click();
-    }
-  });
-  </script>
-
   <!-- Dashboard.js -->
-  <script src="dashboard.js"></script>
+  <script type="module" src="dashboard.js"></script>
 
 </body>
 </html>
