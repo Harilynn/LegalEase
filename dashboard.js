@@ -72,11 +72,12 @@ async function askGemini(prompt) {
   appendMessage("...", "bot"); // typing indicator
 
   try {
-    const res = await fetch("/chat", {  // ✅ correct route
+    const res = await fetch("/api/chat", {  // ✅ use /api/chat
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
     });
+
 
     const payload = await res.json();
     messages.lastChild.remove(); // remove typing indicator
@@ -107,3 +108,4 @@ input.addEventListener("keydown", e => {
 
 // Initial greeting
 appendMessage("👋 Hi! I’m LegalEase Bot. How can I help?");
+
