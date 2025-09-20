@@ -66,13 +66,13 @@ function appendMessage(text, sender = "bot") {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// === Ask Gemini 2.5-Flash via Vercel API ===
+// === Ask Gemini 2.5-Flash via Vercel serverless function ===
 async function askGemini(prompt) {
   appendMessage(prompt, "user");
   appendMessage("...", "bot"); // typing indicator
 
   try {
-    const res = await fetch("/api/chat", {  // ✅ Use Vercel serverless API
+    const res = await fetch("/api/chat", {  // ✅ Use Vercel serverless endpoint
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })

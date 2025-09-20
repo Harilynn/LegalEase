@@ -4,9 +4,6 @@
       "runtime": "@vercel/node"
     }
   },
-  "env": {
-    "GEMINI_API_KEY": "@gemini-api-key"
-  },
   "rewrites": [
     {
       "source": "/",

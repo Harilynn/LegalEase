@@ -14,7 +14,7 @@ async function askGemini(prompt) {
   appendBubble(prompt, "user");
 
   try {
-    const response = await fetch("/api/chat", {  // ✅ Use Vercel serverless API
+    const response = await fetch("/api/chat", {  // ✅ Use Vercel serverless endpoint
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
