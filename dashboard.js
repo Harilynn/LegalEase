@@ -62,12 +62,13 @@ function appendMessage(text, sender = "bot") {
   div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
   div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
   
-  // Simple fix for asterisks - just remove them for cleaner display
   if (sender === "bot") {
-    // Remove markdown asterisks for cleaner display
+    // Clean up markdown formatting for better display
     let cleanText = text
       .replace(/\*\*(.*?)\*\*/g, '$1') // **bold** -> bold (remove asterisks)
-      .replace(/\*(.*?)\*/g, '$1'); // *italic* -> italic (remove asterisks)
+      .replace(/\*([^*\n]+)\*/g, '$1') // *italic* -> italic (remove single asterisks, but not bullet points)
+      .replace(/^\* /gm, '• ') // Convert * at start of line to bullet points
+      .replace(/\n\* /g, '\n• '); // Convert * bullet points in middle of text
     div.innerText = cleanText;
   } else {
     div.innerText = text;
