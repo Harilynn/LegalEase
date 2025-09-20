@@ -6,5 +6,11 @@
   },
   "env": {
     "GEMINI_API_KEY": "@gemini-api-key"
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
+  ]
 }
