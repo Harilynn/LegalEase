@@ -14,7 +14,6 @@
   <!-- Marked.js -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="dashboard.css">
-
 </head>
 <body>
 
@@ -63,14 +62,12 @@
 
     <!-- Charts Row -->
     <div class="charts">
-      <!-- Left: Graph -->
       <div class="panel">
         <h3>Risk Analysis Overview</h3>
         <div class="chart-container">
           <canvas id="riskChart"></canvas>
         </div>
       </div>
-      <!-- Right: Activity -->
       <div class="panel">
         <h3>Document Upload Trends</h3>
         <div class="chart-container">
@@ -117,17 +114,17 @@
   </main>
 
   <!-- Chat Bubble -->
-  <div id="chatBubble"
+  <div id="chatbot-bubble"
        style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
               background: linear-gradient(135deg, #2a9d8f, #52bab3); border-radius: 50%;
               display: flex; align-items: center; justify-content: center; color: white;
               cursor: pointer; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.4);
-              transition: transform 0.2s ease, box-shadow 0.2s ease; z-index: 1000;">
+              z-index: 1000;">
     <i class="fas fa-comments" style="font-size: 1.4rem;"></i>
   </div>
 
   <!-- Chat Window -->
-  <div id="chatWindow"
+  <div id="chatbot-window"
        style="position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px;
               background: white; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
               display: none; flex-direction: column; z-index: 1001; border: 1px solid #ddd;">
@@ -136,16 +133,16 @@
                 color: white; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center;">
       <span style="font-weight: bold; font-size: 0.95rem;">💼 LegalEase Assistant</span>
       <div style="display: flex; gap: 8px;">
-        <button id="expandChat" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;" title="Expand">
+        <button id="expand-btn" style="background: none; border: none; color: white; cursor: pointer;" title="Expand">
           <i class="fas fa-expand"></i>
         </button>
-        <button id="closeChat" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;" title="Close">
+        <button id="close-chat" style="background: none; border: none; color: white; cursor: pointer;" title="Close">
           <i class="fas fa-times"></i>
         </button>
       </div>
     </div>
     <!-- Messages -->
-    <div id="chatMessages"
+    <div id="chatbot-messages"
          style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #fafafa;">
       <div style="align-self: flex-start; background: #e1f5fe; padding: 8px 12px; border-radius: 12px; max-width: 75%; font-size: 0.85rem;">
         👋 Hi! I'm your LegalEase assistant. How can I help you with your documents today?
@@ -153,12 +150,12 @@
     </div>
     <!-- Input -->
     <div style="display:flex; gap:8px; padding:10px; border-top:1px solid #ddd; background:#fafafa;">
-      <input id="chatInput" type="text" placeholder="Ask about your documents..."
+      <input id="chatbot-input" type="text" placeholder="Ask about your documents..."
              style="flex:1; border:1px solid #ccc; border-radius:20px; padding:8px 12px; font-size:0.85rem; outline:none;">
-      <button id="sendChat"
+      <button id="chatbot-send"
               style="background: linear-gradient(135deg, #2a9d8f, #52bab3); color: white; border: none;
                      border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex;
-                     align-items: center; justify-content: center; transition: transform 0.2s ease;">
+                     align-items: center; justify-content: center;">
         <i class="fas fa-paper-plane"></i>
       </button>
     </div>
@@ -169,92 +166,8 @@
     <p>© 2025 LegalEase | Built with MERN</p>
   </footer>
 
-  <!-- Load JS last -->
-  <script type="module">
-
-  // === DOM Elements ===
-  const bubble = document.getElementById("chatBubble");
-  const chatWindow = document.getElementById("chatWindow");
-  const closeBtn = document.getElementById("closeChat");
-  const expandBtn = document.getElementById("expandChat");
-  const messages = document.getElementById("chatMessages");
-  const input = document.getElementById("chatInput");
-  const sendBtn = document.getElementById("sendChat");
-
-  // === Event Listeners ===
-  // Hover effects
-  bubble.addEventListener("mouseenter", () => {
-    bubble.style.transform = "scale(1.1)";
-    bubble.style.boxShadow = "0 6px 20px rgba(42, 157, 143, 0.6)";
-  });
-  bubble.addEventListener("mouseleave", () => {
-    bubble.style.transform = "scale(1)";
-    bubble.style.boxShadow = "0 4px 12px rgba(42, 157, 143, 0.4)";
-  });
-
-  // Toggle chat window
-  bubble.addEventListener("click", () => {
-    chatWindow.style.display = "flex";
-    bubble.style.display = "none";
-  });
-  closeBtn.addEventListener("click", () => {
-    chatWindow.style.display = "none";
-    bubble.style.display = "flex";
-  });
-  expandBtn.addEventListener("click", () => {
-    window.location.href = "chatbot.html";
-  });
-
-  // Append message
-  function appendMessage(text, sender = "bot") {
-    const div = document.createElement("div");
-    div.style.margin = "6px 0";
-    div.style.padding = "8px 12px";
-    div.style.borderRadius = "12px";
-    div.style.maxWidth = "75%";
-    div.style.fontSize = "0.85rem";
-    div.style.wordWrap = "break-word";
-    div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
-    div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
-    div.innerText = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  // Send to Gemini
-  async function askGemini(prompt) {
-    appendMessage(prompt, "user");
-    appendMessage("...", "bot"); // typing indicator
-
-    try {
-      const result = await model.generateContent(prompt);
-      const reply = result.response.text();
-      messages.lastChild.remove(); // remove typing indicator
-      appendMessage(reply, "bot");
-    } catch (err) {
-      messages.lastChild.remove();
-      appendMessage("⚠ Error: " + err.message, "bot");
-    }
-  }
-
-  sendBtn.addEventListener("click", () => {
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = "";
-    askGemini(text);
-  });
-
-  input.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      sendBtn.click();
-    }
-  });
-  </script>
-
   <!-- Dashboard.js -->
-  <script src="dashboard.js"></script>
+  <script type="module" src="dashboard.js"></script>
 
 </body>
 </html>
-
-
