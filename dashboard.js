@@ -61,7 +61,19 @@ function appendMessage(text, sender = "bot") {
   div.style.wordWrap = "break-word";
   div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
   div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
-  div.innerText = text;
+  
+  // Process markdown formatting for bot messages, plain text for user messages
+  if (sender === "bot") {
+    // Simple markdown processing for dashboard chatbot
+    let processedText = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold** -> <strong>
+      .replace(/\*(.*?)\*/g, '<em>$1</em>') // *italic* -> <em>
+      .replace(/\n/g, '<br>'); // newlines -> <br>
+    div.innerHTML = processedText;
+  } else {
+    div.innerText = text;
+  }
+  
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
