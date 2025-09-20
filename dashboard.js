@@ -66,26 +66,34 @@ function appendMessage(text, sender = "bot") {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// === Ask Gemini 2.5-Flash via serverless function ===
+// === Ask Gemini 2.5-Flash via chatbot server ===
 async function askGemini(prompt) {
   appendMessage(prompt, "user");
   appendMessage("...", "bot"); // typing indicator
 
   try {
-    const res = await fetch("/api/chat", {  // ✅ serverless route
+    const res = await fetch("http://localhost:3000/chat", {  // ✅ Use chatbot server
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
     });
 
+    if (!res.ok) {
+      throw new Error(`Server responded with ${res.status}`);
+    }
+
     const payload = await res.json();
     messages.lastChild.remove(); // remove typing indicator
 
-    if (payload?.reply) appendMessage(payload.reply, "bot");
-    else appendMessage("⚠ No reply from server", "bot");
+    if (payload && payload.reply && typeof payload.reply === 'string') {
+      appendMessage(payload.reply, "bot");
+    } else {
+      appendMessage("⚠ Sorry, I received an empty response. Please try again.", "bot");
+    }
 
   } catch (err) {
     messages.lastChild.remove();
+    console.error("Dashboard chat error:", err);
     appendMessage("⚠ Error: " + err.message, "bot");
   }
 }

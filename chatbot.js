@@ -19,9 +19,21 @@ async function askGemini(prompt) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
     });
+    
+    if (!response.ok) {
+      throw new Error(`Server responded with ${response.status}`);
+    }
+    
     const data = await response.json();
-    appendBubble(data.reply, "bot");
+    
+    // Handle the response safely
+    if (data && data.reply && typeof data.reply === 'string') {
+      appendBubble(data.reply, "bot");
+    } else {
+      appendBubble("⚠️ Sorry, I received an empty response. Please try again.", "bot");
+    }
   } catch (err) {
+    console.error("Chat error:", err);
     appendBubble("⚠️ Error: " + err.message, "bot");
   }
 }
