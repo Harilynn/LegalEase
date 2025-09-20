@@ -27,6 +27,7 @@
         <li><a href="scan-doc.html">Scan Doc</a></li>
         <li><a href="profile.html">Profile</a></li>
         <li><a href="chatbot.html">Chat</a></li>
+        <li><a href="#" onclick="logout()" style="color: #ff6b6b;">Logout</a></li>
       </ul>
     </div>
   </nav>
@@ -168,6 +169,51 @@
 
   <!-- Dashboard.js -->
   <script type="module" src="dashboard.js"></script>
+
+  <!-- Firebase v9 Modern SDK for logout -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCciCYiT1BCdDfzwL5mfLlHkfS07PcPKHU",
+      authDomain: "legal-ease-12fa8.firebaseapp.com",
+      projectId: "legal-ease-12fa8",
+      storageBucket: "legal-ease-12fa8.firebasestorage.app",
+      messagingSenderId: "498087536058",
+      appId: "1:498087536058:web:dd8597226f6f9732852983",
+      measurementId: "G-3ZJRLHB8KG"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Check if user is authenticated
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.log("User not authenticated, redirecting to login");
+        window.location.href = 'login.html';
+      } else {
+        console.log("Welcome to dashboard:", user.email);
+      }
+    });
+
+    // Make logout function global
+    window.logout = async function() {
+      if (confirm('Are you sure you want to logout?')) {
+        try {
+          await signOut(auth);
+          console.log("✅ User signed out");
+          window.location.href = 'index.html';
+        } catch (error) {
+          console.error("❌ Sign out error:", error);
+          alert('Error signing out: ' + error.message);
+        }
+      }
+    };
+  </script>
 
 </body>
 </html>
