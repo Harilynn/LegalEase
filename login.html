@@ -338,16 +338,13 @@
 
     console.log("🔥 Firebase initialized successfully!");
 
-    // Check if user is already logged in - but don't redirect immediately
+    // Check auth state but don't auto-redirect - let user choose
+    let isFormSubmitted = false;
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User already logged in:", user.email);
-        // Only redirect if not currently showing a success popup
-        if (!popupOverlay.style.display || popupOverlay.style.display === 'none') {
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 1000);
-        }
+      if (user && isFormSubmitted) {
+        console.log("User authenticated via form submission:", user.email);
+        // Only show popup if user just logged in via form
+        popupOverlay.style.display = 'flex';
       }
     });
 
@@ -367,21 +364,17 @@
       submitBtn.textContent = 'Signing In...';
       
       try {
+        // Set flag that form was submitted
+        isFormSubmitted = true;
+        
         // Sign in with Firebase Auth
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
         console.log("✅ User signed in:", user);
         
-        // Show success popup first
+        // Show success popup
         popupOverlay.style.display = 'flex';
-        
-        // Auto-redirect to dashboard after 2 seconds, or user can click button
-        setTimeout(() => {
-          if (popupOverlay.style.display === 'flex') {
-            window.location.href = 'dashboard.html';
-          }
-        }, 2000);
         
       } catch (error) {
         console.error("❌ Sign in error:", error);
