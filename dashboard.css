@@ -39,7 +39,7 @@
       text-decoration: none;
     }
     .logo::after {
-      content: '⚖️';
+      content: '⚖';
       margin-left: 8px;
       animation: scaleBalance 3s ease-in-out infinite;
       display: inline-block;
