@@ -13,55 +13,260 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Marked.js -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
   <link rel="stylesheet" href="dashboard.css">
+  <!-- Google AI SDK -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@google/generative-ai": "https://esm.run/@google/generative-ai"
+    }
+  }
+  </script>
+
 </head>
 <body>
+
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <a href="index.html" class="logo">LegalEase</a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
         <li><a href="dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="review-docs.html">Review Docs</a></li>
         <li><a href="scan-doc.html">Scan Doc</a></li>
         <li><a href="profile.html">Profile</a></li>
-        <li><a href="login.html">Login</a></li>
+        <li><a href="chatbot.html">Chat</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Main content -->
+  <!-- Main Content -->
   <main>
     <h1>Dashboard</h1>
     <div class="subtitle">Your document insights at a glance</div>
 
-    <!-- Charts + Panels (same as before)... -->
-    <canvas id="riskChart"></canvas>
-    <canvas id="docsChart"></canvas>
-  </main>
-
-  <!-- Floating Chatbot -->
-  <div id="chatbot-bubble"><i class="fas fa-comment-alt"></i></div>
-  <div id="chatbot-window">
-    <div class="chat-header">
-      <span><i class="fas fa-balance-scale"></i> LegalEase Bot</span>
-      <div>
-        <button id="expand-btn"><i class="fas fa-external-link-alt"></i></button>
-        <button id="close-chat"><i class="fas fa-times"></i></button>
+    <!-- Stats Row -->
+    <div class="stats">
+      <div class="card">
+        <h3><i class="fas fa-file-alt"></i> Total Documents</h3>
+        <div class="value">12</div>
+        <div class="desc">+3 this month</div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-exclamation-triangle"></i> High Risk Issues</h3>
+        <div class="value red">8</div>
+        <div class="desc">Needs review</div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-clock"></i> Last Scan</h3>
+        <div class="value" style="font-size:1.3rem; color:#555;">2 hrs ago</div>
+        <div class="desc">Real Estate Contract</div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-chart-line"></i> Compliance Score</h3>
+        <div class="value">85%</div>
+        <div class="desc">Above average</div>
       </div>
     </div>
-    <div id="chatbot-messages" class="chat-body"></div>
-    <div class="composer">
-      <textarea id="chatbot-input" placeholder="Type your question..."></textarea>
-      <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+
+    <!-- Charts Row -->
+    <div class="charts">
+      <!-- Left: Graph -->
+      <div class="panel">
+        <h3>Risk Analysis Overview</h3>
+        <div class="chart-container">
+          <canvas id="riskChart"></canvas>
+        </div>
+      </div>
+      <!-- Right: Activity -->
+      <div class="panel">
+        <h3>Document Upload Trends</h3>
+        <div class="chart-container">
+          <canvas id="docsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="panel" style="margin-top:2rem;">
+      <h3>Recent Activity</h3>
+      <div class="recent-item">
+        <div class="recent-icon"><i class="fas fa-upload"></i></div>
+        <div class="recent-text">
+          <strong>Employment Agreement</strong> uploaded and analyzed
+        </div>
+        <div class="recent-time">2 hours ago</div>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="recent-text">
+          <strong>High-risk clause</strong> detected in Real Estate Contract
+        </div>
+        <div class="recent-time">1 day ago</div>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="recent-text">
+          <strong>NDA Review</strong> completed with 95% compliance score
+        </div>
+        <div class="recent-time">3 days ago</div>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><i class="fas fa-user"></i></div>
+        <div class="recent-text">
+          <strong>Profile settings</strong> updated successfully
+        </div>
+        <div class="recent-time">1 week ago</div>
+      </div>
+      <div style="text-align:right; margin-top:1rem;">
+        <a href="#" style="color:#2a9d8f; text-decoration:none; font-size:0.9rem;">View all activity →</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Chat Bubble -->
+  <div id="chatBubble"
+       style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
+              background: linear-gradient(135deg, #2a9d8f, #52bab3); border-radius: 50%;
+              display: flex; align-items: center; justify-content: center; color: white;
+              cursor: pointer; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.4);
+              transition: transform 0.2s ease, box-shadow 0.2s ease; z-index: 1000;">
+    <i class="fas fa-comments" style="font-size: 1.4rem;"></i>
+  </div>
+
+  <!-- Chat Window -->
+  <div id="chatWindow"
+       style="position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px;
+              background: white; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+              display: none; flex-direction: column; z-index: 1001; border: 1px solid #ddd;">
+    <!-- Header -->
+    <div style="padding: 15px; background: linear-gradient(135deg, #2a9d8f, #52bab3);
+                color: white; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-weight: bold; font-size: 0.95rem;">💼 LegalEase Assistant</span>
+      <div style="display: flex; gap: 8px;">
+        <button id="expandChat" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;" title="Expand">
+          <i class="fas fa-expand"></i>
+        </button>
+        <button id="closeChat" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Messages -->
+    <div id="chatMessages"
+         style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #fafafa;">
+      <div style="align-self: flex-start; background: #e1f5fe; padding: 8px 12px; border-radius: 12px; max-width: 75%; font-size: 0.85rem;">
+        👋 Hi! I'm your LegalEase assistant. How can I help you with your documents today?
+      </div>
+    </div>
+    <!-- Input -->
+    <div style="display:flex; gap:8px; padding:10px; border-top:1px solid #ddd; background:#fafafa;">
+      <input id="chatInput" type="text" placeholder="Ask about your documents..."
+             style="flex:1; border:1px solid #ccc; border-radius:20px; padding:8px 12px; font-size:0.85rem; outline:none;">
+      <button id="sendChat"
+              style="background: linear-gradient(135deg, #2a9d8f, #52bab3); color: white; border: none;
+                     border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex;
+                     align-items: center; justify-content: center; transition: transform 0.2s ease;">
+        <i class="fas fa-paper-plane"></i>
+      </button>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer><p>© 2025 LegalEase | Built with MERN</p></footer>
+  <footer>
+    <p>© 2025 LegalEase | Built with MERN</p>
+  </footer>
 
-  <!-- Scripts -->
+  <!-- Load JS last -->
+  <script type="module">
+  import { GoogleGenerativeAI } from "@google/generative-ai";
+
+  // === DOM Elements ===
+  const bubble = document.getElementById("chatBubble");
+  const chatWindow = document.getElementById("chatWindow");
+  const closeBtn = document.getElementById("closeChat");
+  const expandBtn = document.getElementById("expandChat");
+  const messages = document.getElementById("chatMessages");
+  const input = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendChat");
+
+  // === Gemini Setup ===
+  const GEMINI_API_KEY = "AIzaSyB84EyDJKwPvOAl1eJnGOJJn8LXLLKa7-4"; // Replace with your actual API key
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  // === Event Listeners ===
+  // Hover effects
+  bubble.addEventListener("mouseenter", () => {
+    bubble.style.transform = "scale(1.1)";
+    bubble.style.boxShadow = "0 6px 20px rgba(42, 157, 143, 0.6)";
+  });
+  bubble.addEventListener("mouseleave", () => {
+    bubble.style.transform = "scale(1)";
+    bubble.style.boxShadow = "0 4px 12px rgba(42, 157, 143, 0.4)";
+  });
+
+  // Toggle chat window
+  bubble.addEventListener("click", () => {
+    chatWindow.style.display = "flex";
+    bubble.style.display = "none";
+  });
+  closeBtn.addEventListener("click", () => {
+    chatWindow.style.display = "none";
+    bubble.style.display = "flex";
+  });
+  expandBtn.addEventListener("click", () => {
+    window.location.href = "chatbot.html";
+  });
+
+  // Append message
+  function appendMessage(text, sender = "bot") {
+    const div = document.createElement("div");
+    div.style.margin = "6px 0";
+    div.style.padding = "8px 12px";
+    div.style.borderRadius = "12px";
+    div.style.maxWidth = "75%";
+    div.style.fontSize = "0.85rem";
+    div.style.wordWrap = "break-word";
+    div.style.alignSelf = sender === "user" ? "flex-end" : "flex-start";
+    div.style.background = sender === "user" ? "#c6f7e2" : "#e1f5fe";
+    div.innerText = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // Send to Gemini
+  async function askGemini(prompt) {
+    appendMessage(prompt, "user");
+    appendMessage("...", "bot"); // typing indicator
+
+    try {
+      const result = await model.generateContent(prompt);
+      const reply = result.response.text();
+      messages.lastChild.remove(); // remove typing indicator
+      appendMessage(reply, "bot");
+    } catch (err) {
+      messages.lastChild.remove();
+      appendMessage("⚠ Error: " + err.message, "bot");
+    }
+  }
+
+  sendBtn.addEventListener("click", () => {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    askGemini(text);
+  });
+
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      sendBtn.click();
+    }
+  });
+  </script>
+
+  <!-- Dashboard.js -->
   <script src="dashboard.js"></script>
+
 </body>
 </html>
