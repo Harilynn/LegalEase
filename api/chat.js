@@ -1,10 +1,8 @@
 // api/chat.js
-import { json } from "micro"; // or you can use Next.js API route if in Next.js
 import fetch from "node-fetch"; // optional on Node 18+
 import dotenv from "dotenv";
 
-// Load env variables locally (ignored in Vercel)
-dotenv.config();
+dotenv.config(); // Only needed locally; Vercel reads env automatically
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -13,7 +11,7 @@ export default async function handler(req, res) {
 
   let body;
   try {
-    body = await json(req);
+    body = await req.json?.() || JSON.parse(req.body);
   } catch {
     return res.status(400).json({ error: "Invalid JSON" });
   }
@@ -40,7 +38,6 @@ export default async function handler(req, res) {
     );
 
     const data = await googleResp.json();
-
     const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(data);
 
     return res.status(200).json({ reply });
