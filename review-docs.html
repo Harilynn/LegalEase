@@ -588,7 +588,7 @@
         <div class="upload-text">Drop your document here or click to browse</div>
         <div class="upload-subtext">Supports PDF, DOC, DOCX, TXT files (Max 10MB)</div>
         <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" style="display: none;" />
-        <button class="btn btn-upload" type="button" id="uploadButton">
+        <button class="btn btn-upload" type="button" onclick="triggerFileInput()">
           <i class="fas fa-folder-open"></i> Choose File
         </button>
       </div>
@@ -695,20 +695,11 @@
       console.log('Setting up event listeners...');
       const uploadArea = document.getElementById('uploadArea');
       const fileInput = document.getElementById('fileInput');
-      const uploadButton = document.getElementById('uploadButton');
 
-      if (!uploadArea || !fileInput || !uploadButton) {
+      if (!uploadArea || !fileInput) {
         console.error('Upload elements not found');
         return;
       }
-
-      // Button click handler
-      uploadButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Upload button clicked');
-        fileInput.click();
-      });
 
       // Drag and drop functionality
       uploadArea.addEventListener('dragover', function(e) {
@@ -740,10 +731,10 @@
         }
       });
 
-      // Click to upload (excluding button)
+      // Click to upload area (but not the button)
       uploadArea.addEventListener('click', function(e) {
-        // Don't trigger if clicking the button or its children
-        if (!e.target.closest('#uploadButton')) {
+        // Only trigger if not clicking the button
+        if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
           console.log('Upload area clicked');
           fileInput.click();
         }
@@ -1065,8 +1056,6 @@ Provide detailed analysis in JSON format:
         negotiationTips: template.negotiationTips,
         summary: template.insights
       };
-    }
-      }
     }
 
     // Load documents from Firestore
@@ -1400,6 +1389,18 @@ Provide detailed analysis in JSON format:
         fileInput.click();
       } else {
         console.error('File input not found');
+      }
+    }
+
+    // Simple function to trigger file input
+    function triggerFileInput() {
+      console.log('Trigger file input called');
+      const fileInput = document.getElementById('fileInput');
+      if (fileInput) {
+        console.log('File input found, clicking...');
+        fileInput.click();
+      } else {
+        console.error('File input not found!');
       }
     }
 
