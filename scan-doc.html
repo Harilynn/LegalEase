@@ -203,6 +203,21 @@
       transition: all 0.3s ease;
       box-sizing: border-box;
     }
+
+    /* Fix dropdown options visibility */
+    .form-group select option {
+      background: #2a2a2a;
+      color: #fff;
+      padding: 0.5rem;
+      border: none;
+    }
+
+    .form-group select option:hover,
+    .form-group select option:focus,
+    .form-group select option:checked {
+      background: #4a4a4a;
+      color: #fff;
+    }
     
     .form-group input:focus,
     .form-group select:focus,
