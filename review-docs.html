@@ -460,14 +460,41 @@
       
       const { onAuthStateChanged } = firebaseModules;
       
+      // Add a loading indicator
+      const mainContent = document.querySelector('main');
+      const originalContent = mainContent.innerHTML;
+      mainContent.innerHTML = `
+        <div style="text-align: center; padding: 4rem; color: #48cab2;">
+          <div class="spinner" style="margin: 0 auto 1rem; width: 40px; height: 40px;"></div>
+          <h3>Loading your documents...</h3>
+          <p>Checking authentication status...</p>
+        </div>
+      `;
+
+      // Set up auth state listener with timeout
+      let authResolved = false;
+      
+      const authTimeout = setTimeout(() => {
+        if (!authResolved) {
+          console.log('Auth check timeout, redirecting to login');
+          window.location.href = 'login.html';
+        }
+      }, 5000); // 5 second timeout
+
       onAuthStateChanged(window.firebaseAuth, (user) => {
+        authResolved = true;
+        clearTimeout(authTimeout);
+        
         console.log('Auth state changed:', user ? user.email : 'No user');
         if (user) {
+          console.log('User authenticated:', user.email);
           currentUser = user;
+          // Restore original content
+          mainContent.innerHTML = originalContent;
           loadDocuments();
           setupEventListeners();
         } else {
-          console.log('No user, redirecting to login');
+          console.log('No user authenticated, redirecting to login');
           window.location.href = 'login.html';
         }
       });

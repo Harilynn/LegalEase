@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Authentication - LegalEase</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .debug-info {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .status {
+            font-weight: bold;
+            color: #48cab2;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .success {
+            color: #48cab2;
+        }
+        button {
+            background: #48cab2;
+            color: #fff;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Authentication Debug Page</h1>
+    
+    <div class="debug-info">
+        <h3>Firebase Status</h3>
+        <div id="firebaseStatus">Checking Firebase...</div>
+    </div>
+
+    <div class="debug-info">
+        <h3>Authentication Status</h3>
+        <div id="authStatus">Checking authentication...</div>
+    </div>
+
+    <div class="debug-info">
+        <h3>User Information</h3>
+        <div id="userInfo">No user data yet...</div>
+    </div>
+
+    <div class="debug-info">
+        <h3>Actions</h3>
+        <button onclick="checkAuth()">Refresh Auth Status</button>
+        <button onclick="goToLogin()">Go to Login</button>
+        <button onclick="goToDashboard()">Go to Dashboard</button>
+        <button onclick="goToReviewDocs()">Go to Review Docs</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqNZCuDVvEOwqMllvpO1QMNjIFp4UlxAU",
+            authDomain: "legalease-6b263.firebaseapp.com",
+            projectId: "legalease-6b263",
+            storageBucket: "legalease-6b263.firebasestorage.app",
+            messagingSenderId: "1026892799767",
+            appId: "1:1026892799767:web:9c9f6bfcce60a50b14fd36"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Make available globally
+        window.firebaseAuth = auth;
+        window.firebaseApp = app;
+
+        document.getElementById('firebaseStatus').innerHTML = 
+            '<span class="success">✅ Firebase initialized successfully</span>';
+
+        // Monitor auth state
+        onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed:', user);
+            
+            if (user) {
+                document.getElementById('authStatus').innerHTML = 
+                    '<span class="success">✅ User is logged in</span>';
+                
+                document.getElementById('userInfo').innerHTML = `
+                    <strong>Email:</strong> ${user.email}<br>
+                    <strong>UID:</strong> ${user.uid}<br>
+                    <strong>Email Verified:</strong> ${user.emailVerified}<br>
+                    <strong>Display Name:</strong> ${user.displayName || 'Not set'}<br>
+                    <strong>Last Sign In:</strong> ${user.metadata.lastSignInTime}<br>
+                    <strong>Creation Time:</strong> ${user.metadata.creationTime}
+                `;
+            } else {
+                document.getElementById('authStatus').innerHTML = 
+                    '<span class="error">❌ No user logged in</span>';
+                
+                document.getElementById('userInfo').innerHTML = 
+                    '<span class="error">No user data - user is not authenticated</span>';
+            }
+        });
+    </script>
+
+    <script>
+        function checkAuth() {
+            location.reload();
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function goToReviewDocs() {
+            window.location.href = 'review-docs.html';
+        }
+    </script>
+</body>
+</html>
