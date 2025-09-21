@@ -405,6 +405,26 @@
     <!-- Documents Table -->
     <div class="table-section">
       <h3><i class="fas fa-folder"></i> Your Documents</h3>
+      
+      <!-- Setup Instructions (initially hidden) -->
+      <div id="setupInstructions" class="upload-section" style="display: none; background: rgba(255, 107, 107, 0.1); border: 1px solid #ff6b6b;">
+        <h3 style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> Database Setup Required</h3>
+        <p style="color: #ccc; line-height: 1.6;">
+          Your document storage database needs to be set up. Follow these quick steps:
+        </p>
+        <ol style="color: #ccc; line-height: 1.8; margin-left: 1rem;">
+          <li>Go to <a href="https://console.firebase.google.com" target="_blank" style="color: #48cab2;">Firebase Console</a></li>
+          <li>Select your <strong>legal-ease-12fa8</strong> project</li>
+          <li>Click "<strong>Firestore Database</strong>" in the left sidebar</li>
+          <li>Click "<strong>Create database</strong>" → Choose "<strong>Start in test mode</strong>" → Click "<strong>Next</strong>" → Choose a region → Click "<strong>Done</strong>"</li>
+          <li>Go to the "<strong>Rules</strong>" tab and paste the rules from <code>firestore-rules.md</code></li>
+          <li>Click "<strong>Publish</strong>" to save the rules</li>
+        </ol>
+        <button class="btn btn-upload" onclick="retryLoadDocuments()" style="margin-top: 1rem;">
+          <i class="fas fa-refresh"></i> Try Again
+        </button>
+      </div>
+      
       <table class="doc-table">
         <thead>
           <tr>
@@ -594,14 +614,30 @@
           aiSummary: analysis.summary
         };
 
-        const docRef = await addDoc(collection(window.firebaseDb, 'documents'), docData);
-        console.log('Document saved to Firestore with ID:', docRef.id);
-        
-        showStatus('Document uploaded and analyzed successfully!', 'success');
-        loadDocuments(); // Refresh the table
-        
-        // Reset file input
-        document.getElementById('fileInput').value = '';
+        try {
+          const docRef = await addDoc(collection(window.firebaseDb, 'documents'), docData);
+          console.log('Document saved to Firestore with ID:', docRef.id);
+          
+          showStatus('Document uploaded and analyzed successfully!', 'success');
+          loadDocuments(); // Refresh the table
+          
+          // Reset file input
+          document.getElementById('fileInput').value = '';
+        } catch (firestoreError) {
+          console.error('Firestore save error:', firestoreError);
+          
+          let errorMessage = 'Failed to save document to database.';
+          if (firestoreError.code === 'permission-denied') {
+            errorMessage = 'Database permissions not set up. Document uploaded but not saved.';
+          } else if (firestoreError.code === 'not-found') {
+            errorMessage = 'Database not found. Please enable Firestore in Firebase Console.';
+          } else if (firestoreError.code === 'failed-precondition') {
+            errorMessage = 'Database not initialized. Please enable Firestore first.';
+          }
+          
+          showStatus(errorMessage, 'error');
+          throw firestoreError; // Re-throw to be caught by outer catch
+        }
         
       } catch (error) {
         console.error('Upload error:', error);
@@ -703,6 +739,8 @@
 
       try {
         console.log('Loading documents for user:', currentUser.uid);
+        console.log('Firestore database:', window.firebaseDb);
+        
         const q = query(
           collection(window.firebaseDb, 'documents'),
           where('userId', '==', currentUser.uid),
@@ -759,7 +797,33 @@
         console.log('Documents table updated');
       } catch (error) {
         console.error('Error loading documents:', error);
-        showStatus('Failed to load documents.', 'error');
+        console.error('Error details:', error.code, error.message);
+        
+        // Show specific error message based on the error type
+        let errorMessage = 'Failed to load documents.';
+        if (error.code === 'permission-denied') {
+          errorMessage = 'Database permissions not set up. Please check Firestore rules.';
+        } else if (error.code === 'not-found') {
+          errorMessage = 'Database not found. Please enable Firestore in Firebase Console.';
+        } else if (error.code === 'failed-precondition') {
+          errorMessage = 'Database not initialized. Please enable Firestore in Firebase Console.';
+        }
+        
+        showStatus(errorMessage, 'error');
+        
+        // Show setup instructions instead of error table
+        document.getElementById('setupInstructions').style.display = 'block';
+        
+        // Show user-friendly message in table
+        const tableBody = document.getElementById('documentsTableBody');
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; color: #ff6b6b; padding: 2rem;">
+              <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+              Database not set up yet. Please follow the setup instructions above.
+            </td>
+          </tr>
+        `;
       }
     }
 
@@ -883,6 +947,14 @@
       } else {
         console.error('File input not found');
       }
+    }
+
+    // Retry loading documents (for setup button)
+    function retryLoadDocuments() {
+      console.log('Retrying document load...');
+      document.getElementById('setupInstructions').style.display = 'none';
+      hideStatus();
+      loadDocuments();
     }
 
     // Add logout functionality
