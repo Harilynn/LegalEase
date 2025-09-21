@@ -735,28 +735,17 @@
     async function loadDocuments() {
       if (!currentUser || !firebaseModules) return;
 
-      const { collection, query, where, orderBy, getDocs } = firebaseModules;
+      const { collection, query, where, getDocs } = firebaseModules;
 
       try {
         console.log('Loading documents for user:', currentUser.uid);
         console.log('Firestore database:', window.firebaseDb);
         
-        // First try a simple query without orderBy (in case index is missing)
-        let q;
-        try {
-          q = query(
-            collection(window.firebaseDb, 'documents'),
-            where('userId', '==', currentUser.uid),
-            orderBy('uploadedAt', 'desc')
-          );
-        } catch (indexError) {
-          console.log('OrderBy failed, trying simple query:', indexError);
-          // Fallback to simple query without ordering
-          q = query(
-            collection(window.firebaseDb, 'documents'),
-            where('userId', '==', currentUser.uid)
-          );
-        }
+        // Use simple query without orderBy to avoid index requirement
+        const q = query(
+          collection(window.firebaseDb, 'documents'),
+          where('userId', '==', currentUser.uid)
+        );
         
         const querySnapshot = await getDocs(q);
         const tableBody = document.getElementById('documentsTableBody');
@@ -783,7 +772,7 @@
           docs.push({ id: doc.id, ...doc.data() });
         });
         
-        // Sort by uploadedAt if available
+        // Sort by uploadedAt manually (newest first)
         docs.sort((a, b) => {
           if (a.uploadedAt && b.uploadedAt) {
             return b.uploadedAt.toDate() - a.uploadedAt.toDate();
@@ -838,9 +827,11 @@
         } else if (error.code === 'not-found') {
           errorMessage = 'Database not found. Please enable Firestore in Firebase Console.';
         } else if (error.code === 'failed-precondition') {
-          errorMessage = 'Database not initialized. Please enable Firestore in Firebase Console.';
-        } else if (error.code === 'failed-precondition' && error.message.includes('index')) {
-          errorMessage = 'Database index needed. Try uploading a document to create the index automatically.';
+          if (error.message.includes('index')) {
+            errorMessage = 'Database index needed. Please create the required index in Firebase Console.';
+          } else {
+            errorMessage = 'Database not initialized. Please enable Firestore in Firebase Console.';
+          }
         }
         
         showStatus(errorMessage, 'error');
