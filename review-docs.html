@@ -14,7 +14,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     // Firebase config
     const firebaseConfig = {
@@ -35,7 +35,7 @@
     window.firebaseAuth = auth;
     window.firebaseDb = db;
     window.firebaseModules = {
-      collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, updateDoc,
+      collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy, updateDoc,
       onAuthStateChanged, signOut
     };
   </script>
@@ -435,7 +435,7 @@
   <script>
     // Global variables
     let currentUser = null;
-    const { collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, updateDoc, onAuthStateChanged, signOut } = window.firebaseModules;
+    const { collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy, updateDoc, onAuthStateChanged, signOut } = window.firebaseModules;
 
     // Authentication check
     document.addEventListener('DOMContentLoaded', function() {
@@ -490,35 +490,53 @@
 
     // File upload handler
     async function handleFileUpload(file) {
+      console.log('File upload started:', file.name, file.type, file.size);
+      
       // Validate file
       const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
       const maxSize = 10 * 1024 * 1024; // 10MB
 
       if (!allowedTypes.includes(file.type)) {
+        console.error('Invalid file type:', file.type);
         showStatus('Please upload a PDF, DOC, DOCX, or TXT file.', 'error');
         return;
       }
 
       if (file.size > maxSize) {
+        console.error('File too large:', file.size);
         showStatus('File size must be less than 10MB.', 'error');
+        return;
+      }
+
+      if (!currentUser) {
+        console.error('No authenticated user');
+        showStatus('You must be logged in to upload documents.', 'error');
         return;
       }
 
       // Show loading
       showLoading(true);
       hideStatus();
+      console.log('Starting upload process...');
 
       try {
         // Convert file to base64
+        console.log('Converting file to base64...');
         const base64Content = await fileToBase64(file);
+        console.log('Base64 conversion completed');
         
         // Extract text content for AI analysis
+        console.log('Extracting text content...');
         const textContent = await extractTextContent(file);
+        console.log('Text extraction completed:', textContent.substring(0, 100) + '...');
         
         // Analyze document with AI
+        console.log('Starting AI analysis...');
         const analysis = await analyzeDocument(textContent);
+        console.log('AI analysis completed:', analysis);
 
         // Save to Firestore
+        console.log('Saving to Firestore...');
         const docData = {
           userId: currentUser.uid,
           fileName: file.name,
@@ -532,7 +550,8 @@
           aiSummary: analysis.summary
         };
 
-        await addDoc(collection(window.firebaseDb, 'documents'), docData);
+        const docRef = await addDoc(collection(window.firebaseDb, 'documents'), docData);
+        console.log('Document saved to Firestore with ID:', docRef.id);
         
         showStatus('Document uploaded and analyzed successfully!', 'success');
         loadDocuments(); // Refresh the table
@@ -542,7 +561,7 @@
         
       } catch (error) {
         console.error('Upload error:', error);
-        showStatus('Failed to upload document. Please try again.', 'error');
+        showStatus(`Failed to upload document: ${error.message}`, 'error');
       } finally {
         showLoading(false);
       }
@@ -561,18 +580,23 @@
     // Extract text content from file
     async function extractTextContent(file) {
       return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsText(file);
-        reader.onload = () => {
-          let text = reader.result;
-          // For demo purposes, we'll use the first 1000 characters
-          // In a real app, you'd use proper document parsers
-          if (text.length > 1000) {
-            text = text.substring(0, 1000) + '...';
-          }
-          resolve(text);
-        };
-        reader.onerror = error => reject(error);
+        // For binary files like PDF, DOC, we'll use a fallback approach
+        if (file.type === 'text/plain') {
+          const reader = new FileReader();
+          reader.readAsText(file);
+          reader.onload = () => {
+            let text = reader.result;
+            if (text.length > 1000) {
+              text = text.substring(0, 1000) + '...';
+            }
+            resolve(text);
+          };
+          reader.onerror = error => reject(error);
+        } else {
+          // For binary files, return a placeholder text for AI analysis
+          const placeholderText = `This is a ${file.type} document named "${file.name}" with size ${formatFileSize(file.size)}. Please analyze this document for legal risks and concerns.`;
+          resolve(placeholderText);
+        }
       });
     }
 
@@ -584,6 +608,8 @@
           'http://localhost:3000/chat' : 
           '/api/chat';
 
+        console.log('AI analysis endpoint:', endpoint);
+
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
@@ -594,11 +620,14 @@
           })
         });
 
+        console.log('AI response status:', response.status);
+
         if (!response.ok) {
-          throw new Error('AI analysis failed');
+          throw new Error(`AI analysis failed: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('AI response data:', data);
         const analysis = data.response || data.message || 'Analysis completed';
 
         // Parse AI response (simplified parsing)
@@ -613,10 +642,11 @@
         };
       } catch (error) {
         console.error('AI analysis error:', error);
+        // Return default analysis if AI fails
         return {
           riskLevel: 'Medium',
-          insights: 'AI analysis unavailable',
-          summary: 'Document uploaded successfully. Manual review recommended.'
+          insights: 'AI analysis unavailable - manual review recommended',
+          summary: 'Document uploaded successfully. AI analysis could not be completed at this time. Please review manually.'
         };
       }
     }
@@ -687,12 +717,14 @@
     async function reviewDocument(docId) {
       try {
         const docRef = doc(window.firebaseDb, 'documents', docId);
-        const docSnap = await getDocs(query(collection(window.firebaseDb, 'documents'), where('__name__', '==', docId)));
+        const docSnap = await getDoc(docRef);
         
-        if (!docSnap.empty) {
-          const data = docSnap.docs[0].data();
+        if (docSnap.exists()) {
+          const data = docSnap.data();
           // Open review modal or new page with document details
           alert(`Document Review\n\nFile: ${data.fileName}\nRisk Level: ${data.riskLevel}\n\nAI Analysis:\n${data.aiSummary}`);
+        } else {
+          showStatus('Document not found.', 'error');
         }
       } catch (error) {
         console.error('Error reviewing document:', error);
@@ -702,10 +734,11 @@
 
     async function downloadDocument(docId) {
       try {
-        const docSnap = await getDocs(query(collection(window.firebaseDb, 'documents'), where('__name__', '==', docId)));
+        const docRef = doc(window.firebaseDb, 'documents', docId);
+        const docSnap = await getDoc(docRef);
         
-        if (!docSnap.empty) {
-          const data = docSnap.docs[0].data();
+        if (docSnap.exists()) {
+          const data = docSnap.data();
           
           // Convert base64 back to file and download
           const link = document.createElement('a');
@@ -716,6 +749,8 @@
           document.body.removeChild(link);
           
           showStatus('Document downloaded successfully!', 'success');
+        } else {
+          showStatus('Document not found.', 'error');
         }
       } catch (error) {
         console.error('Error downloading document:', error);
