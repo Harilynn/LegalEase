@@ -12,18 +12,19 @@
   
   <!-- Firebase SDK -->
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy, updateDoc } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
 
-    // Firebase config
+    // Firebase config - SAME AS DASHBOARD
     const firebaseConfig = {
-      apiKey: "AIzaSyAqNZCuDVvEOwqMllvpO1QMNjIFp4UlxAU",
-      authDomain: "legalease-6b263.firebaseapp.com",
-      projectId: "legalease-6b263",
-      storageBucket: "legalease-6b263.firebasestorage.app",
-      messagingSenderId: "1026892799767",
-      appId: "1:1026892799767:web:9c9f6bfcce60a50b14fd36"
+      apiKey: "AIzaSyCciCYiT1BCdDfzwL5mfLlHkfS07PcPKHU",
+      authDomain: "legal-ease-12fa8.firebaseapp.com",
+      projectId: "legal-ease-12fa8",
+      storageBucket: "legal-ease-12fa8.firebasestorage.app",
+      messagingSenderId: "498087536058",
+      appId: "1:498087536058:web:dd8597226f6f9732852983",
+      measurementId: "G-3ZJRLHB8KG"
     };
 
     // Initialize Firebase
@@ -452,50 +453,20 @@
       });
     }
 
-    // Authentication check
+    // Simple authentication check - SAME PATTERN AS DASHBOARD
     document.addEventListener('DOMContentLoaded', async function() {
-      console.log('DOM loaded, waiting for Firebase...');
       await waitForFirebase();
-      console.log('Firebase modules loaded:', firebaseModules);
-      
       const { onAuthStateChanged } = firebaseModules;
       
-      // Add a loading indicator
-      const mainContent = document.querySelector('main');
-      const originalContent = mainContent.innerHTML;
-      mainContent.innerHTML = `
-        <div style="text-align: center; padding: 4rem; color: #48cab2;">
-          <div class="spinner" style="margin: 0 auto 1rem; width: 40px; height: 40px;"></div>
-          <h3>Loading your documents...</h3>
-          <p>Checking authentication status...</p>
-        </div>
-      `;
-
-      // Set up auth state listener with timeout
-      let authResolved = false;
-      
-      const authTimeout = setTimeout(() => {
-        if (!authResolved) {
-          console.log('Auth check timeout, redirecting to login');
-          window.location.href = 'login.html';
-        }
-      }, 5000); // 5 second timeout
-
       onAuthStateChanged(window.firebaseAuth, (user) => {
-        authResolved = true;
-        clearTimeout(authTimeout);
-        
-        console.log('Auth state changed:', user ? user.email : 'No user');
-        if (user) {
-          console.log('User authenticated:', user.email);
+        if (!user) {
+          console.log("User not authenticated, redirecting to login");
+          window.location.href = 'login.html';
+        } else {
+          console.log("Welcome to review docs:", user.email);
           currentUser = user;
-          // Restore original content
-          mainContent.innerHTML = originalContent;
           loadDocuments();
           setupEventListeners();
-        } else {
-          console.log('No user authenticated, redirecting to login');
-          window.location.href = 'login.html';
         }
       });
     });
