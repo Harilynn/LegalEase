@@ -9,6 +9,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqNZCuDVvEOwqMllvpO1QMNjIFp4UlxAU",
+      authDomain: "legalease-6b263.firebaseapp.com",
+      projectId: "legalease-6b263",
+      storageBucket: "legalease-6b263.firebasestorage.app",
+      messagingSenderId: "1026892799767",
+      appId: "1:1026892799767:web:9c9f6bfcce60a50b14fd36"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Make Firebase available globally
+    window.firebaseAuth = auth;
+    window.firebaseDb = db;
+    window.firebaseModules = {
+      collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, updateDoc,
+      onAuthStateChanged, signOut
+    };
+  </script>
 
   <style>
     body {
@@ -203,6 +233,112 @@
       transform: translateY(-1px);
     }
 
+    /* Upload Section */
+    .upload-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    .upload-area {
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .upload-area:hover, .upload-area.drag-over {
+      border-color: #48cab2;
+      background: rgba(72, 202, 178, 0.1);
+    }
+    
+    .upload-area input[type="file"] {
+      position: absolute;
+      left: -9999px;
+    }
+    
+    .upload-icon {
+      font-size: 3rem;
+      color: #48cab2;
+      margin-bottom: 1rem;
+    }
+    
+    .upload-text {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .upload-subtext {
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .btn-upload {
+      background: #48cab2;
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+    }
+
+    /* Loading and Status */
+    .loading {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      color: #48cab2;
+      font-weight: bold;
+    }
+
+    .loading.show {
+      display: flex;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(72, 202, 178, 0.3);
+      border-top: 2px solid #48cab2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .status-message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .status-message.success {
+      background: rgba(72, 202, 178, 0.2);
+      border: 1px solid #48cab2;
+      color: #48cab2;
+    }
+
+    .status-message.error {
+      background: rgba(255, 107, 107, 0.2);
+      border: 1px solid #ff6b6b;
+      color: #ff6b6b;
+    }
+
+    .status-message.show {
+      display: block;
+    }
+
     /* Footer */
     footer {
       background: #111;
@@ -240,76 +376,55 @@
   <!-- Main Content -->
   <main>
     <h1>Review Documents</h1>
-    <div class="subtitle">Check risks, benefits, and manage your uploaded documents</div>
+    <div class="subtitle">Upload new documents and manage your document library</div>
 
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th>Document</th>
-          <th>Uploaded On</th>
-          <th>Risk Level</th>
-          <th>Insights</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><i class="fas fa-file-contract"></i> Employment_Agreement.pdf</td>
-          <td>Dec 15, 2024</td>
-          <td><span class="risk-high">High Risk</span></td>
-          <td>Unlimited liability clause found</td>
-          <td>
-            <button class="btn btn-review"><i class="fas fa-eye"></i>Review</button>
-            <button class="btn btn-download"><i class="fas fa-download"></i>Download</button>
-            <button class="btn btn-delete"><i class="fas fa-trash"></i>Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="fas fa-file-alt"></i> NDA_Template.docx</td>
-          <td>Dec 14, 2024</td>
-          <td><span class="risk-medium">Medium Risk</span></td>
-          <td>Unclear termination terms</td>
-          <td>
-            <button class="btn btn-review"><i class="fas fa-eye"></i>Review</button>
-            <button class="btn btn-download"><i class="fas fa-download"></i>Download</button>
-            <button class="btn btn-delete"><i class="fas fa-trash"></i>Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="fas fa-file-pdf"></i> Service_Agreement.pdf</td>
-          <td>Dec 13, 2024</td>
-          <td><span class="risk-low">Low Risk</span></td>
-          <td>Standard terms, well-balanced</td>
-          <td>
-            <button class="btn btn-review"><i class="fas fa-eye"></i>Review</button>
-            <button class="btn btn-download"><i class="fas fa-download"></i>Download</button>
-            <button class="btn btn-delete"><i class="fas fa-trash"></i>Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="fas fa-file-contract"></i> Rental_Lease.pdf</td>
-          <td>Dec 12, 2024</td>
-          <td><span class="risk-medium">Medium Risk</span></td>
-          <td>High security deposit required</td>
-          <td>
-            <button class="btn btn-review"><i class="fas fa-eye"></i>Review</button>
-            <button class="btn btn-download"><i class="fas fa-download"></i>Download</button>
-            <button class="btn btn-delete"><i class="fas fa-trash"></i>Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td><i class="fas fa-file-alt"></i> Terms_of_Service.txt</td>
-          <td>Dec 11, 2024</td>
-          <td><span class="risk-high">High Risk</span></td>
-          <td>Data collection concerns</td>
-          <td>
-            <button class="btn btn-review"><i class="fas fa-eye"></i>Review</button>
-            <button class="btn btn-download"><i class="fas fa-download"></i>Download</button>
-            <button class="btn btn-delete"><i class="fas fa-trash"></i>Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <h3><i class="fas fa-cloud-upload-alt"></i> Upload Document</h3>
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">
+          <i class="fas fa-file-upload"></i>
+        </div>
+        <div class="upload-text">Drop your document here or click to browse</div>
+        <div class="upload-subtext">Supports PDF, DOC, DOCX, TXT files (Max 10MB)</div>
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" />
+        <button class="btn btn-upload" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Choose File
+        </button>
+      </div>
+      
+      <div class="loading" id="uploadLoading">
+        <div class="spinner"></div>
+        <span>Uploading and analyzing document...</span>
+      </div>
+      
+      <div class="status-message" id="statusMessage"></div>
+    </div>
+
+    <!-- Documents Table -->
+    <div class="table-section">
+      <h3><i class="fas fa-folder"></i> Your Documents</h3>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>Uploaded On</th>
+            <th>Size</th>
+            <th>Risk Level</th>
+            <th>AI Insights</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="documentsTableBody">
+          <tr id="noDocuments">
+            <td colspan="6" style="text-align: center; color: #888; padding: 2rem;">
+              <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+              No documents uploaded yet. Upload your first document above!
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
 
   <!-- Footer -->
@@ -318,48 +433,372 @@
   </footer>
 
   <script>
-    // Add interactive functionality
+    // Global variables
+    let currentUser = null;
+    const { collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, updateDoc, onAuthStateChanged, signOut } = window.firebaseModules;
+
+    // Authentication check
     document.addEventListener('DOMContentLoaded', function() {
-      // Add click handlers for buttons
-      document.querySelectorAll('.btn-review').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const row = this.closest('tr');
-          const docName = row.querySelector('td').textContent.trim();
-          alert(`Opening review for: ${docName}`);
-        });
-      });
-
-      document.querySelectorAll('.btn-download').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const row = this.closest('tr');
-          const docName = row.querySelector('td').textContent.trim();
-          alert(`Downloading: ${docName}`);
-        });
-      });
-
-      document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const row = this.closest('tr');
-          const docName = row.querySelector('td').textContent.trim();
-          if (confirm(`Are you sure you want to delete: ${docName}?`)) {
-            row.remove();
-            alert(`${docName} has been deleted.`);
-          }
-        });
-      });
-
-      // Add row hover effects
-      document.querySelectorAll('.doc-table tbody tr').forEach(row => {
-        row.addEventListener('mouseenter', function() {
-          this.style.transform = 'scale(1.01)';
-          this.style.transition = 'all 0.2s ease';
-        });
-        
-        row.addEventListener('mouseleave', function() {
-          this.style.transform = 'scale(1)';
-        });
+      onAuthStateChanged(window.firebaseAuth, (user) => {
+        if (user) {
+          currentUser = user;
+          loadDocuments();
+          setupEventListeners();
+        } else {
+          window.location.href = 'login.html';
+        }
       });
     });
+
+    // Setup event listeners
+    function setupEventListeners() {
+      const uploadArea = document.getElementById('uploadArea');
+      const fileInput = document.getElementById('fileInput');
+
+      // Drag and drop functionality
+      uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+      });
+
+      uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+      });
+
+      uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFileUpload(files[0]);
+        }
+      });
+
+      // File input change
+      fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+          handleFileUpload(e.target.files[0]);
+        }
+      });
+
+      // Click to upload
+      uploadArea.addEventListener('click', function() {
+        fileInput.click();
+      });
+    }
+
+    // File upload handler
+    async function handleFileUpload(file) {
+      // Validate file
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+
+      if (!allowedTypes.includes(file.type)) {
+        showStatus('Please upload a PDF, DOC, DOCX, or TXT file.', 'error');
+        return;
+      }
+
+      if (file.size > maxSize) {
+        showStatus('File size must be less than 10MB.', 'error');
+        return;
+      }
+
+      // Show loading
+      showLoading(true);
+      hideStatus();
+
+      try {
+        // Convert file to base64
+        const base64Content = await fileToBase64(file);
+        
+        // Extract text content for AI analysis
+        const textContent = await extractTextContent(file);
+        
+        // Analyze document with AI
+        const analysis = await analyzeDocument(textContent);
+
+        // Save to Firestore
+        const docData = {
+          userId: currentUser.uid,
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          uploadedAt: new Date(),
+          content: base64Content,
+          textContent: textContent,
+          riskLevel: analysis.riskLevel,
+          insights: analysis.insights,
+          aiSummary: analysis.summary
+        };
+
+        await addDoc(collection(window.firebaseDb, 'documents'), docData);
+        
+        showStatus('Document uploaded and analyzed successfully!', 'success');
+        loadDocuments(); // Refresh the table
+        
+        // Reset file input
+        document.getElementById('fileInput').value = '';
+        
+      } catch (error) {
+        console.error('Upload error:', error);
+        showStatus('Failed to upload document. Please try again.', 'error');
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Convert file to base64
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    // Extract text content from file
+    async function extractTextContent(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = () => {
+          let text = reader.result;
+          // For demo purposes, we'll use the first 1000 characters
+          // In a real app, you'd use proper document parsers
+          if (text.length > 1000) {
+            text = text.substring(0, 1000) + '...';
+          }
+          resolve(text);
+        };
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    // Analyze document with AI
+    async function analyzeDocument(textContent) {
+      try {
+        // Use the same endpoint as the chatbot
+        const endpoint = window.location.hostname === 'localhost' ? 
+          'http://localhost:3000/chat' : 
+          '/api/chat';
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: `Analyze this legal document and provide: 1) Risk level (High/Medium/Low), 2) Key insights/concerns, 3) Brief summary. Document content: ${textContent}`
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('AI analysis failed');
+        }
+
+        const data = await response.json();
+        const analysis = data.response || data.message || 'Analysis completed';
+
+        // Parse AI response (simplified parsing)
+        let riskLevel = 'Medium';
+        if (analysis.toLowerCase().includes('high risk')) riskLevel = 'High';
+        else if (analysis.toLowerCase().includes('low risk')) riskLevel = 'Low';
+
+        return {
+          riskLevel: riskLevel,
+          insights: analysis.substring(0, 100) + '...',
+          summary: analysis
+        };
+      } catch (error) {
+        console.error('AI analysis error:', error);
+        return {
+          riskLevel: 'Medium',
+          insights: 'AI analysis unavailable',
+          summary: 'Document uploaded successfully. Manual review recommended.'
+        };
+      }
+    }
+
+    // Load documents from Firestore
+    async function loadDocuments() {
+      if (!currentUser) return;
+
+      try {
+        const q = query(
+          collection(window.firebaseDb, 'documents'),
+          where('userId', '==', currentUser.uid),
+          orderBy('uploadedAt', 'desc')
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const tableBody = document.getElementById('documentsTableBody');
+        
+        if (querySnapshot.empty) {
+          tableBody.innerHTML = `
+            <tr id="noDocuments">
+              <td colspan="6" style="text-align: center; color: #888; padding: 2rem;">
+                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                No documents uploaded yet. Upload your first document above!
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        let html = '';
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const uploadDate = data.uploadedAt.toDate().toLocaleDateString();
+          const fileSize = formatFileSize(data.fileSize);
+          const fileIcon = getFileIcon(data.fileType);
+          
+          html += `
+            <tr data-doc-id="${doc.id}">
+              <td><i class="${fileIcon}"></i> ${data.fileName}</td>
+              <td>${uploadDate}</td>
+              <td>${fileSize}</td>
+              <td><span class="risk-${data.riskLevel.toLowerCase()}">${data.riskLevel} Risk</span></td>
+              <td>${data.insights}</td>
+              <td>
+                <button class="btn btn-review" onclick="reviewDocument('${doc.id}')">
+                  <i class="fas fa-eye"></i>Review
+                </button>
+                <button class="btn btn-download" onclick="downloadDocument('${doc.id}')">
+                  <i class="fas fa-download"></i>Download
+                </button>
+                <button class="btn btn-delete" onclick="deleteDocument('${doc.id}')">
+                  <i class="fas fa-trash"></i>Delete
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+        
+        tableBody.innerHTML = html;
+      } catch (error) {
+        console.error('Error loading documents:', error);
+        showStatus('Failed to load documents.', 'error');
+      }
+    }
+
+    // Document actions
+    async function reviewDocument(docId) {
+      try {
+        const docRef = doc(window.firebaseDb, 'documents', docId);
+        const docSnap = await getDocs(query(collection(window.firebaseDb, 'documents'), where('__name__', '==', docId)));
+        
+        if (!docSnap.empty) {
+          const data = docSnap.docs[0].data();
+          // Open review modal or new page with document details
+          alert(`Document Review\n\nFile: ${data.fileName}\nRisk Level: ${data.riskLevel}\n\nAI Analysis:\n${data.aiSummary}`);
+        }
+      } catch (error) {
+        console.error('Error reviewing document:', error);
+        showStatus('Failed to open document review.', 'error');
+      }
+    }
+
+    async function downloadDocument(docId) {
+      try {
+        const docSnap = await getDocs(query(collection(window.firebaseDb, 'documents'), where('__name__', '==', docId)));
+        
+        if (!docSnap.empty) {
+          const data = docSnap.docs[0].data();
+          
+          // Convert base64 back to file and download
+          const link = document.createElement('a');
+          link.href = data.content;
+          link.download = data.fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          showStatus('Document downloaded successfully!', 'success');
+        }
+      } catch (error) {
+        console.error('Error downloading document:', error);
+        showStatus('Failed to download document.', 'error');
+      }
+    }
+
+    async function deleteDocument(docId) {
+      if (!confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
+        return;
+      }
+
+      try {
+        await deleteDoc(doc(window.firebaseDb, 'documents', docId));
+        showStatus('Document deleted successfully!', 'success');
+        loadDocuments(); // Refresh the table
+      } catch (error) {
+        console.error('Error deleting document:', error);
+        showStatus('Failed to delete document.', 'error');
+      }
+    }
+
+    // Utility functions
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function getFileIcon(fileType) {
+      if (fileType.includes('pdf')) return 'fas fa-file-pdf';
+      if (fileType.includes('word')) return 'fas fa-file-word';
+      if (fileType.includes('text')) return 'fas fa-file-alt';
+      return 'fas fa-file';
+    }
+
+    function showLoading(show) {
+      const loading = document.getElementById('uploadLoading');
+      if (show) {
+        loading.classList.add('show');
+      } else {
+        loading.classList.remove('show');
+      }
+    }
+
+    function showStatus(message, type) {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.textContent = message;
+      statusEl.className = `status-message ${type} show`;
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        hideStatus();
+      }, 5000);
+    }
+
+    function hideStatus() {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.classList.remove('show');
+    }
+
+    // Add logout functionality
+    if (document.querySelector('.nav-links')) {
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.innerHTML += `
+        <li>
+          <a href="#" onclick="logout()" style="color: #ff6b6b;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </li>
+      `;
+    }
+
+    async function logout() {
+      try {
+        await signOut(window.firebaseAuth);
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
   </script>
 
 </body>
