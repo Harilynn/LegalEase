@@ -461,8 +461,7 @@
     }
     
     .upload-area input[type="file"] {
-      position: absolute;
-      left: -9999px;
+      display: none;
     }
     
     .upload-icon {
@@ -588,8 +587,8 @@
         </div>
         <div class="upload-text">Drop your document here or click to browse</div>
         <div class="upload-subtext">Supports PDF, DOC, DOCX, TXT files (Max 10MB)</div>
-        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" />
-        <button class="btn btn-upload" onclick="testFileInput()">
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" style="display: none;" />
+        <button class="btn btn-upload" type="button" id="uploadButton">
           <i class="fas fa-folder-open"></i> Choose File
         </button>
       </div>
@@ -696,11 +695,20 @@
       console.log('Setting up event listeners...');
       const uploadArea = document.getElementById('uploadArea');
       const fileInput = document.getElementById('fileInput');
+      const uploadButton = document.getElementById('uploadButton');
 
-      if (!uploadArea || !fileInput) {
+      if (!uploadArea || !fileInput || !uploadButton) {
         console.error('Upload elements not found');
         return;
       }
+
+      // Button click handler
+      uploadButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Upload button clicked');
+        fileInput.click();
+      });
 
       // Drag and drop functionality
       uploadArea.addEventListener('dragover', function(e) {
@@ -732,10 +740,10 @@
         }
       });
 
-      // Click to upload
+      // Click to upload (excluding button)
       uploadArea.addEventListener('click', function(e) {
-        // Don't trigger if clicking the button
-        if (e.target.tagName !== 'BUTTON') {
+        // Don't trigger if clicking the button or its children
+        if (!e.target.closest('#uploadButton')) {
           console.log('Upload area clicked');
           fileInput.click();
         }
