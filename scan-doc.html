@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/4ca844b3a8.js" crossorigin="anonymous"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     body {
@@ -720,6 +722,272 @@
       .comparison-grid { grid-template-columns: 1fr; }
       .analysis-tabs { flex-wrap: wrap; }
     }
+
+    /* Enhanced Analysis Styles */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .analysis-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .analysis-panel h3 {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .analysis-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .analysis-list li {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .analysis-list li:last-child {
+      border-bottom: none;
+    }
+
+    .analysis-list li i {
+      margin-top: 0.2rem;
+      min-width: 16px;
+    }
+
+    /* Risk Analysis Styles */
+    .risk-summary {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .risk-chart-container {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      height: 300px;
+    }
+
+    .risk-breakdown h3 {
+      margin-bottom: 1rem;
+    }
+
+    .risk-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .risk-item:last-child {
+      border-bottom: none;
+    }
+
+    .risk-percentage {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .risk-factors {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .risk-factor-item {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+
+    .risk-factor-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .risk-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .risk-header h4 {
+      margin: 0;
+    }
+
+    .risk-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .risk-badge.risk-high {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .risk-badge.risk-medium {
+      background: #ffa726;
+      color: white;
+    }
+
+    .risk-badge.risk-low {
+      background: #66bb6a;
+      color: white;
+    }
+
+    /* Negotiation Styles */
+    .negotiation-priority {
+      margin-bottom: 2rem;
+    }
+
+    .priority-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .priority-item {
+      padding: 1.5rem;
+      border-radius: 12px;
+      border-left: 4px solid;
+    }
+
+    .priority-item.critical {
+      background: rgba(255, 107, 107, 0.1);
+      border-left-color: #ff6b6b;
+    }
+
+    .priority-item.important {
+      background: rgba(255, 167, 38, 0.1);
+      border-left-color: #ffa726;
+    }
+
+    .priority-item.optional {
+      background: rgba(102, 187, 106, 0.1);
+      border-left-color: #66bb6a;
+    }
+
+    .priority-item h4 {
+      margin: 0 0 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .priority-item p {
+      margin: 0;
+      color: #ccc;
+    }
+
+    .negotiation-tips {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .tips-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tips-list li {
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .tips-list li:last-child {
+      border-bottom: none;
+    }
+
+    .tips-list li i {
+      color: #ffa726;
+      margin-top: 0.2rem;
+    }
+
+    /* Clause Analysis Styles */
+    .clause-analysis {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .clause-card {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .clause-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .clause-card.risk-high {
+      border-left-color: #ff6b6b;
+    }
+
+    .clause-card.risk-medium {
+      border-left-color: #ffa726;
+    }
+
+    .clause-card.risk-low {
+      border-left-color: #66bb6a;
+    }
+
+    .clause-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .clause-header h4 {
+      margin: 0;
+    }
+
+    .clause-content p {
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .risk-summary {
+        grid-template-columns: 1fr;
+      }
+      
+      .priority-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 
 </head>
@@ -1308,23 +1576,66 @@
 
     // Complete analysis and show results
     function completeAdvancedAnalysis() {
-      // Generate mock analysis data
+      // Generate comprehensive mock analysis data
       analysisData = {
         overall_score: 7.2,
         risk_level: 'Medium',
         recommendation: 'Proceed with caution - negotiate key terms',
         key_issues: [
-          'Limited termination rights',
-          'High penalty clauses',
-          'Broad liability exposure',
-          'Unclear payment terms'
+          'Limited termination rights with 90-day notice required',
+          'High penalty clauses for early contract breach',
+          'Broad liability exposure with unlimited damages',
+          'Unclear payment terms and milestone definitions'
         ],
         positive_aspects: [
-          'Reasonable compensation',
-          'Standard work hours',
-          'Good benefits package',
-          'Clear job responsibilities'
-        ]
+          'Competitive market-rate compensation package',
+          'Standard 40-hour work week with overtime provisions',
+          'Comprehensive benefits including health, dental, and 401k',
+          'Clear job responsibilities and performance metrics'
+        ],
+        risk_factors: [
+          { factor: 'Liability Exposure', level: 'High', description: 'Unlimited liability could result in significant financial exposure' },
+          { factor: 'Termination Clauses', level: 'Medium', description: '90-day notice period is longer than industry standard' },
+          { factor: 'Payment Terms', level: 'Medium', description: 'Net-45 payment terms may affect cash flow' },
+          { factor: 'Intellectual Property', level: 'Low', description: 'Standard IP assignment with reasonable scope' }
+        ],
+        key_clauses: [
+          { clause: 'Limitation of Liability', risk: 'High', description: 'No cap on liability exposure for damages', recommendation: 'Negotiate a liability cap at 12 months of contract value' },
+          { clause: 'Termination for Convenience', risk: 'Medium', description: '90-day notice required for termination', recommendation: 'Reduce notice period to 30 days standard' },
+          { clause: 'Payment Schedule', risk: 'Medium', description: 'Net-45 payment terms with 1.5% monthly late fees', recommendation: 'Negotiate Net-30 terms with reduced late fees' },
+          { clause: 'Non-Compete Agreement', risk: 'Medium', description: '18-month non-compete with 50-mile radius', recommendation: 'Limit to 12 months and 25-mile radius' },
+          { clause: 'Intellectual Property Rights', risk: 'Low', description: 'Standard work-for-hire IP assignment', recommendation: 'Acceptable as written' }
+        ],
+        negotiation_tips: [
+          'Request a liability cap equal to the total contract value',
+          'Negotiate shorter notice periods for termination (30 days max)',
+          'Ask for improved payment terms (Net-30 instead of Net-45)',
+          'Limit non-compete scope geographically and temporally',
+          'Add force majeure provisions for unforeseen circumstances',
+          'Include dispute resolution through mediation before litigation',
+          'Request annual contract value review and adjustment clauses'
+        ],
+        needs_met: [
+          'Competitive compensation aligned with market rates',
+          'Clear scope of work and deliverable expectations',
+          'Standard intellectual property protection',
+          'Professional liability insurance coverage included',
+          'Reasonable contract duration (24 months)',
+          'Automated renewal clause with opt-out provision'
+        ],
+        needs_gaps: [
+          'No liability cap protection for vendor',
+          'Extended notice period for termination',
+          'Longer payment terms than preferred',
+          'Non-compete restrictions may be too broad',
+          'Limited flexibility for scope changes',
+          'No price adjustment mechanism for inflation'
+        ],
+        analytics: {
+          risk_distribution: { high: 25, medium: 45, low: 30 },
+          clause_analysis: { favorable: 40, neutral: 35, unfavorable: 25 },
+          negotiation_priority: { critical: 3, important: 5, optional: 4 }
+        }
       };
       
       // Hide progress and show results
@@ -1379,7 +1690,169 @@
               </div>
             </div>
           </div>
+          
+          <div class="analysis-grid">
+            <div class="analysis-panel">
+              <h3><i class="fas fa-check-circle" style="color: #66bb6a;"></i> Positive Aspects</h3>
+              <ul class="analysis-list">
+                ${analysisData.positive_aspects.map(aspect => `<li><i class="fas fa-plus"></i> ${aspect}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="analysis-panel">
+              <h3><i class="fas fa-exclamation-triangle" style="color: #ffa726;"></i> Key Issues</h3>
+              <ul class="analysis-list">
+                ${analysisData.key_issues.map(issue => `<li><i class="fas fa-warning"></i> ${issue}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
         `;
+      }
+
+      // Populate risk analysis
+      const riskResults = document.getElementById('riskResults');
+      if (riskResults) {
+        riskResults.innerHTML = `
+          <div class="risk-summary">
+            <div class="risk-chart-container">
+              <canvas id="riskChart" width="300" height="300"></canvas>
+            </div>
+            <div class="risk-breakdown">
+              <h3>Risk Breakdown</h3>
+              <div class="risk-item">
+                <span class="risk-label">High Risk</span>
+                <span class="risk-percentage" style="color: #ff6b6b;">${analysisData.analytics.risk_distribution.high}%</span>
+              </div>
+              <div class="risk-item">
+                <span class="risk-label">Medium Risk</span>
+                <span class="risk-percentage" style="color: #ffa726;">${analysisData.analytics.risk_distribution.medium}%</span>
+              </div>
+              <div class="risk-item">
+                <span class="risk-label">Low Risk</span>
+                <span class="risk-percentage" style="color: #66bb6a;">${analysisData.analytics.risk_distribution.low}%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="risk-factors">
+            <h3>Detailed Risk Analysis</h3>
+            ${analysisData.risk_factors.map(risk => `
+              <div class="risk-factor-item">
+                <div class="risk-header">
+                  <h4>${risk.factor}</h4>
+                  <span class="risk-badge risk-${risk.level.toLowerCase()}">${risk.level}</span>
+                </div>
+                <p>${risk.description}</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        
+        // Create risk chart
+        createRiskChart();
+      }
+
+      // Populate needs vs document comparison
+      const needsMet = document.getElementById('needsMet');
+      const needsGaps = document.getElementById('needsGaps');
+      
+      if (needsMet) {
+        needsMet.innerHTML = analysisData.needs_met.map(need => 
+          `<li><i class="fas fa-check"></i> ${need}</li>`
+        ).join('');
+      }
+      
+      if (needsGaps) {
+        needsGaps.innerHTML = analysisData.needs_gaps.map(gap => 
+          `<li><i class="fas fa-times"></i> ${gap}</li>`
+        ).join('');
+      }
+
+      // Populate negotiation tips
+      const negotiationResults = document.getElementById('negotiationResults');
+      if (negotiationResults) {
+        negotiationResults.innerHTML = `
+          <div class="negotiation-priority">
+            <h3>Negotiation Priorities</h3>
+            <div class="priority-grid">
+              <div class="priority-item critical">
+                <h4><i class="fas fa-exclamation-circle"></i> Critical (${analysisData.analytics.negotiation_priority.critical})</h4>
+                <p>Must negotiate before signing</p>
+              </div>
+              <div class="priority-item important">
+                <h4><i class="fas fa-star"></i> Important (${analysisData.analytics.negotiation_priority.important})</h4>
+                <p>Highly recommended to address</p>
+              </div>
+              <div class="priority-item optional">
+                <h4><i class="fas fa-info-circle"></i> Optional (${analysisData.analytics.negotiation_priority.optional})</h4>
+                <p>Nice to have improvements</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="negotiation-tips">
+            <h3>Specific Negotiation Strategies</h3>
+            <ul class="tips-list">
+              ${analysisData.negotiation_tips.map(tip => `<li><i class="fas fa-lightbulb"></i> ${tip}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      // Populate key clauses
+      const clauseResults = document.getElementById('clauseResults');
+      if (clauseResults) {
+        clauseResults.innerHTML = `
+          <div class="clause-analysis">
+            <h3>Clause-by-Clause Analysis</h3>
+            ${analysisData.key_clauses.map(clause => `
+              <div class="clause-card risk-${clause.risk.toLowerCase()}">
+                <div class="clause-header">
+                  <h4>${clause.clause}</h4>
+                  <span class="risk-badge risk-${clause.risk.toLowerCase()}">${clause.risk} Risk</span>
+                </div>
+                <div class="clause-content">
+                  <p><strong>Current Terms:</strong> ${clause.description}</p>
+                  <p><strong>Recommendation:</strong> ${clause.recommendation}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    // Create risk distribution chart
+    function createRiskChart() {
+      const ctx = document.getElementById('riskChart');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['High Risk', 'Medium Risk', 'Low Risk'],
+            datasets: [{
+              data: [
+                analysisData.analytics.risk_distribution.high,
+                analysisData.analytics.risk_distribution.medium,
+                analysisData.analytics.risk_distribution.low
+              ],
+              backgroundColor: ['#ff6b6b', '#ffa726', '#66bb6a'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#ffffff',
+                  padding: 20
+                }
+              }
+            }
+          }
+        });
       }
     }
 
