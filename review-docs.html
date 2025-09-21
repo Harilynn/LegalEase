@@ -741,17 +741,28 @@
         console.log('Loading documents for user:', currentUser.uid);
         console.log('Firestore database:', window.firebaseDb);
         
-        const q = query(
-          collection(window.firebaseDb, 'documents'),
-          where('userId', '==', currentUser.uid),
-          orderBy('uploadedAt', 'desc')
-        );
+        // First try a simple query without orderBy (in case index is missing)
+        let q;
+        try {
+          q = query(
+            collection(window.firebaseDb, 'documents'),
+            where('userId', '==', currentUser.uid),
+            orderBy('uploadedAt', 'desc')
+          );
+        } catch (indexError) {
+          console.log('OrderBy failed, trying simple query:', indexError);
+          // Fallback to simple query without ordering
+          q = query(
+            collection(window.firebaseDb, 'documents'),
+            where('userId', '==', currentUser.uid)
+          );
+        }
         
         const querySnapshot = await getDocs(q);
         const tableBody = document.getElementById('documentsTableBody');
         
         if (querySnapshot.empty) {
-          console.log('No documents found');
+          console.log('No documents found for user:', currentUser.uid);
           tableBody.innerHTML = `
             <tr id="noDocuments">
               <td colspan="6" style="text-align: center; color: #888; padding: 2rem;">
@@ -765,27 +776,44 @@
 
         console.log('Found documents:', querySnapshot.size);
         let html = '';
+        let docs = [];
+        
+        // Collect all documents
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const uploadDate = data.uploadedAt.toDate().toLocaleDateString();
-          const fileSize = formatFileSize(data.fileSize);
-          const fileIcon = getFileIcon(data.fileType);
+          docs.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Sort by uploadedAt if available
+        docs.sort((a, b) => {
+          if (a.uploadedAt && b.uploadedAt) {
+            return b.uploadedAt.toDate() - a.uploadedAt.toDate();
+          }
+          return 0;
+        });
+        
+        // Generate HTML
+        docs.forEach((data) => {
+          const uploadDate = data.uploadedAt ? data.uploadedAt.toDate().toLocaleDateString() : 'Unknown';
+          const fileSize = formatFileSize(data.fileSize || 0);
+          const fileIcon = getFileIcon(data.fileType || '');
+          const riskLevel = data.riskLevel || 'Medium';
+          const insights = data.insights || 'Analysis pending...';
           
           html += `
-            <tr data-doc-id="${doc.id}">
-              <td><i class="${fileIcon}"></i> ${data.fileName}</td>
+            <tr data-doc-id="${data.id}">
+              <td><i class="${fileIcon}"></i> ${data.fileName || 'Unknown file'}</td>
               <td>${uploadDate}</td>
               <td>${fileSize}</td>
-              <td><span class="risk-${data.riskLevel.toLowerCase()}">${data.riskLevel} Risk</span></td>
-              <td>${data.insights}</td>
+              <td><span class="risk-${riskLevel.toLowerCase()}">${riskLevel} Risk</span></td>
+              <td>${insights}</td>
               <td>
-                <button class="btn btn-review" onclick="reviewDocument('${doc.id}')">
+                <button class="btn btn-review" onclick="reviewDocument('${data.id}')">
                   <i class="fas fa-eye"></i>Review
                 </button>
-                <button class="btn btn-download" onclick="downloadDocument('${doc.id}')">
+                <button class="btn btn-download" onclick="downloadDocument('${data.id}')">
                   <i class="fas fa-download"></i>Download
                 </button>
-                <button class="btn btn-delete" onclick="deleteDocument('${doc.id}')">
+                <button class="btn btn-delete" onclick="deleteDocument('${data.id}')">
                   <i class="fas fa-trash"></i>Delete
                 </button>
               </td>
@@ -794,7 +822,11 @@
         });
         
         tableBody.innerHTML = html;
-        console.log('Documents table updated');
+        console.log('Documents table updated with', docs.length, 'documents');
+        
+        // Hide setup instructions if visible
+        document.getElementById('setupInstructions').style.display = 'none';
+        
       } catch (error) {
         console.error('Error loading documents:', error);
         console.error('Error details:', error.code, error.message);
@@ -807,6 +839,8 @@
           errorMessage = 'Database not found. Please enable Firestore in Firebase Console.';
         } else if (error.code === 'failed-precondition') {
           errorMessage = 'Database not initialized. Please enable Firestore in Firebase Console.';
+        } else if (error.code === 'failed-precondition' && error.message.includes('index')) {
+          errorMessage = 'Database index needed. Try uploading a document to create the index automatically.';
         }
         
         showStatus(errorMessage, 'error');
